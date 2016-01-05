@@ -1,8 +1,190 @@
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title> hackIDE </title>
+
+		<!-- Stylesheets -->
+		<link rel="stylesheet" type="text/css" href="{% static 'hackIDE/css/bootstrap.min.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static 'hackIDE/css/custom.css' %}" />
+
     </head>
     <body>
+
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/ide/"> hackIDE </a>
+				</div>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="/ide/"> New Code </a></li>
+					<li><a href=""> About </a></li>
+				</ul>
+			</div>
+		</nav>
+
+    	<div class="container">
+
+    		<div class="row">
+
+    			<div class="left col-md-8">
+
+    				<div id="editor-topbar">
+
+    					<div class="lang-choose">
+
+							<select class="form-control" name="lang" id="lang">
+								<option value="C">C (gcc 4.8.1)</option>
+								<option value="CPP" selected>C++ (g++ 4.8.1)</option>
+                                <option value="CSHARP">C#</option>
+								<option value="CLOJURE">Clojure (clojure 1.1.0)</option>
+								<option value="CSS">CSS</option>
+                                <option value="HASKELL">Haskell (ghc 7.4.1)</option>
+                                <option value="JAVA">Java (openjdk 1.7.0_09)</option>
+                                <option value="JAVASCRIPT">JavaScript</option>
+                                <option value="OBJECTIVEC">Objective-C (clang 3.3)</option>
+                                <option value="PERL">Perl (perl 5.14.2)</option>
+                                <option value="PHP">PHP (php 5.3.10)</option>
+                                <option value="PYTHON">Python (python 2.7.3)</option>
+                                <option value="R">R (RScript 2.14.1)</option>
+                                <option value="RUBY">Ruby (ruby 2.1.1)</option>
+                                <option value="RUST">Rust (rustc 1.4.0)</option>
+                                <option value="SCALA">Scala (scalac 2.9.1)</option>
+                                <option value="TEXT">Text</option>
+							</select>
+
+						</div> <!-- END of lang-choose -->
+
+						<div id="settings">
+
+							<a class="cursor no-select" id="download-code">
+								<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+							</a>
+							
+							<a class="cursor no-select" id="show-settings">
+								<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+							</a>
+							
+							<div id="settings-pane">
+								<div id="inner-settings-pane"></div>
+								<label>Editor Theme</label>
+								<select class="form-control" name="editor-theme" id="editor-theme">
+									<option value="LIGHT" selected>Light</option>
+									<option value="DARK">Dark</option>
+								</select>
+								<label>Indent Spaces</label>
+								<input class="form-control" name="indent-spaces" id="indent-spaces" type="text" value="4">
+							</div>
+
+						</div> <!-- END of settings-pane -->
+
+    				</div> <!-- END of editor-topbar -->
+    				
+    				<pre id="editor"></pre>
+
+    				<div id="editor-statusbar"></div>
+
+    			</div>
+
+    			<div class="right col-md-4"></div>
+
+    		</div> <!-- END of row -->
+
+    		<div class="row">
+    			<div class="col-md-8 right">
+    				<div class="pull-left custom-input-panel">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" id="custom-input-checkbox"> Use custom input to test the code
+							</label>
+						</div>
+    				</div>
+    				<div class="pull-right run-save-panel">
+	    				<button class="btn btn-" id="save-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+S"> Save </button>
+	    				<button class="btn btn-success" id="run-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+Enter"> Hack(run) it! </button>
+	    			</div>
+    			</div>
+    		</div> <!-- END of row -->
+
+    		<div class="row">
+    			<div class="col-md-8 right">
+	    			<!-- custom input textarea -->
+					<div class="custom-input-container">
+						<textarea id="custom-input" class="nice-textarea" placeholder="Custom input"></textarea>
+					</div>
+				</div>
+    		</div> <!-- END of row -->
+
+    		<div class="row">
+    			<div class="col-md-8 right">
+    				<div class="output-response-box">
+    					<div class="output-details">
+    						<div class="output-details-info">
+    							<div class="key"> Run Status: </div>
+    							<div class="value"> AC </div>
+    						</div>
+    						<div class="output-details-info">
+    							<div class="key"> Compile Status: </div>
+    							<div class="value"> OK </div>
+    						</div>
+    						<div class="output-details-info">
+    							<div class="key"> Time (sec): </div>
+    							<div class="value"> 0.0112 </div>
+    						</div>
+    						<div class="output-details-info">
+    							<div class="key"> Memory (KB): </div>
+    							<div class="value"> 64 </div>
+    						</div>
+    					</div>
+
+    					<div class="output-io">
+                            <div class="output-error-box">
+                                <div class="key"> Compile error </div>
+                                <pre class="message"></pre>
+                            </div>
+    						<div class="output-io-info output-i-info">
+    							<div class="key"> Input (stdin) </div>
+    							<pre class="output-text output-i"> </pre>
+    							<span class="output-empty-message output-i-message"><i>Standard input is empty</i></span>
+    						</div>
+    						<div class="output-io-info output-o-info">
+    							<div class="key"> Output (stdout) </div>
+    							<pre class="output-text output-o"> </pre>
+    							<span class="output-empty-message output-o-message"><i>Standard output is empty</i></span>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+
+    	</div> <!-- END of container -->
+
+
+    	<footer class="container">
+    		<span class="pull-left"> Powered by <a href="https://www.hackerearth.com/docs/api/developers/code/v3/" target="_blank">HackerEarth API</a> </span>
+    		<span class="pull-right"> Copyrights © <a href="http://sahildua.com" target="_blank">Sahil Dua</a> 2016 | Made with <span style="color: #f7403a">&hearts;</span> in India </span>
+    	</footer>
+
+
+    	<!-- jQuery -->
+    	<script src="{% static 'hackIDE/js/jquery.min.js' %}" type="text/javascript" charset="utf-8"></script>
+
+    	<!-- Bootstrap (include all individual files below) -->
+    	<script src="{% static 'hackIDE/js/custom.js' %}" type="text/javascript" charset="utf-8"></script>
+    	<script src="{% static 'hackIDE/js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
+    	<script src="{% static 'hackIDE/ace-builds/src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+    	<script src="{% static 'hackIDE/ace-builds/src/ext-statusbar.js' %}" type="text/javascript" charset="utf-8"></script>
+    	<script src="{% static 'hackIDE/ace-builds/src/ext-language_tools.js' %}" type="text/javascript" charset="utf-8"></script>
+
+    	<!-- Include all the custom js here -->
+		<script>
+			
+		</script>
+
     </body>
 </html>
