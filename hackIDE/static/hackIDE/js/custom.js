@@ -1,8 +1,8 @@
 /* 
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
-* @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-06 01:50:42
+* @Last Modified by:   Sahil Dua
+* @Last Modified time: 2016-01-06 05:05:44
 */
 
 
@@ -18,6 +18,10 @@ $(document).ready(function(){
 	var editorThemeSelected = "DARK";
 	// indent-spaces
 	var indentSpaces = 4;
+
+	// HackerEarth API endpoints
+	var COMPILE_URL = "compile/"
+	var RUN_URL = "run/"
 
 
 	// trigger extension
@@ -43,10 +47,94 @@ $(document).ready(function(){
 	var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"));
 
 
+	// disable compile code button initially
+	$('#compile-code').prop('disabled', true);
+
+
 	// function to update editorContent with current content of editor
-	function updateContent(editor){
+	function updateContent(){
 		editorContent = editor.getValue();
+		console.log("Updated Content:\n" + editorContent);
 	}
+
+
+	// function to send AJAX request to 'compile/' endpoint
+	function compileCode(){
+		
+		// hide previous compile/output results
+		$(".output-response-box").hide();
+
+		// Change button text when this method is called
+		$("#compile-code").html("Compiling..");
+
+		// take recent content of the editor for compiling
+		updateContent();
+
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+
+		var compile_data = {
+			source: editorContent,
+			lang: languageSelected,
+			csrfmiddlewaretoken: csrf_token
+		};
+
+		// AJAX request to Django for compiling code
+		$.ajax({
+			url: COMPILE_URL,
+			type: "POST",
+			data: compile_data,
+			dataType: "json",
+			success: function(response){
+				console.log("compile-code AJAX request done.");
+				console.log(response);
+
+				// Change button text when this method is called
+				$("#compile-code").html("Compile it!");
+
+				$("html, body").delay(500).animate({
+					scrollTop: $('#show-results').offset().top 
+				}, 1000);
+
+				$(".output-response-box").show();
+				$(".run-status").hide();
+				$(".time-sec").hide();
+				$(".memory-kb").hide();
+
+				if(response.compile_status == "OK"){
+					$(".output-io").hide();
+					$(".compile-status").children(".value").html("OK");
+				}
+				else{
+					$(".output-io").show();
+					$(".output-io-info").hide();
+					$(".compile-status").children(".value").html("CE");
+					$(".error-key").html("Compile error");
+					$(".error-message").html(response.compile_status);
+				}
+			},
+			error: function(error){
+				console.log("compile-code AJAX request failed.");
+			}
+		});
+
+	}
+
+
+	// assigning a new key binding for shift-enter for compiling the code
+	editor.commands.addCommand({
+
+		name: 'codeCompileCommand',
+		bindKey: {win: 'Shift-Enter',  mac: 'Shift-Enter'},
+		exec: function(editor) {
+
+			console.log("Compile the code.");
+
+			compileCode();
+
+		},
+		readOnly: false // false if this command should not apply in readOnly mode
+
+	});
 
 
 	// assigning a new key binding for ctrl-enter for running the code
@@ -167,6 +255,16 @@ $(document).ready(function(){
 
 		console.log("Contents of editor changed.");
 
+		updateContent();
+
+		// disable compile button when editor is empty
+		if(editorContent != ""){
+			$("#compile-code").prop('disabled', false);
+		}
+		else{
+			$("#compile-code").prop('disabled', true);
+		}
+
 	});
 
 
@@ -184,8 +282,18 @@ $(document).ready(function(){
 	$("#save-code").click(function(){
 
 		// TODO: implement save code feature
-
+		
 		console.log("#save-code clicked.");
+
+	});
+
+
+	// when compile-code is clicked
+	$("#compile-code").click(function(){
+
+		console.log("#compile-code clicked.");
+
+		compileCode();
 
 	});
 

@@ -7,7 +7,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title> hackIDE </title>
+		<title> hackIDE | Online Code Compiler &amp; Interpreter</title>
 
 		<!-- Stylesheets -->
 		<link rel="stylesheet" type="text/css" href="{% static 'hackIDE/css/bootstrap.min.css' %}" />
@@ -96,7 +96,7 @@
     		</div> <!-- END of row -->
 
     		<div class="row">
-    			<div class="col-md-8 right">
+    			<div class="col-md-8 right" id="show-results">
     				<div class="pull-left custom-input-panel">
 						<div class="checkbox">
 							<label>
@@ -105,7 +105,8 @@
 						</div>
     				</div>
     				<div class="pull-right run-save-panel">
-	    				<button class="btn btn-" id="save-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+S"> Save </button>
+	    				<button class="btn" id="save-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+S"> Save </button>
+	    				<button class="btn btn-info" id="compile-code" data-toggle="tooltip" data-placement="top" title="Press Shift+Enter"> Compile it! </button>
 	    				<button class="btn btn-success" id="run-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+Enter"> Hack(run) it! </button>
 	    			</div>
     			</div>
@@ -124,28 +125,28 @@
     			<div class="col-md-8 right">
     				<div class="output-response-box">
     					<div class="output-details">
-    						<div class="output-details-info">
-    							<div class="key"> Run Status: </div>
-    							<div class="value"> AC </div>
+    						<div class="output-details-info run-status">
+    							<div class="key">Run Status:</div>
+    							<div class="value"></div>
     						</div>
-    						<div class="output-details-info">
-    							<div class="key"> Compile Status: </div>
-    							<div class="value"> OK </div>
+    						<div class="output-details-info compile-status">
+    							<div class="key">Compile Status:</div>
+    							<div class="value"></div>
     						</div>
-    						<div class="output-details-info">
-    							<div class="key"> Time (sec): </div>
-    							<div class="value"> 0.0112 </div>
+    						<div class="output-details-info time-sec">
+    							<div class="key">Time (sec):</div>
+    							<div class="value"></div>
     						</div>
-    						<div class="output-details-info">
-    							<div class="key"> Memory (KB): </div>
-    							<div class="value"> 64 </div>
+    						<div class="output-details-info memory-kb">
+    							<div class="key">Memory (KB):</div>
+    							<div class="value"></div>
     						</div>
     					</div>
 
     					<div class="output-io">
                             <div class="output-error-box">
-                                <div class="key"> Compile error </div>
-                                <pre class="message"></pre>
+                                <div class="error-key"></div>
+                                <pre class="error-message"></pre>
                             </div>
     						<div class="output-io-info output-i-info">
     							<div class="key"> Input (stdin) </div>
@@ -170,6 +171,7 @@
     		<span class="pull-right"> Copyrights © <a href="http://sahildua.com" target="_blank">Sahil Dua</a> 2016 | Made with <span style="color: #f7403a">&hearts;</span> in India </span>
     	</footer>
 
+    	<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
 
     	<!-- jQuery -->
     	<script src="{% static 'hackIDE/js/jquery.min.js' %}" type="text/javascript" charset="utf-8"></script>
