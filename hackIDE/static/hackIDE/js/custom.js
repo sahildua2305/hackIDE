@@ -1,8 +1,8 @@
 /* 
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
-* @Last Modified by:   Sahil Dua
-* @Last Modified time: 2016-01-06 07:07:02
+* @Last Modified by:   sahildua2305
+* @Last Modified time: 2016-01-06 21:31:12
 */
 
 
@@ -108,7 +108,7 @@ $(document).ready(function(){
 				else{
 					$(".output-io").show();
 					$(".output-io-info").hide();
-					$(".compile-status").children(".value").html("CE");
+					$(".compile-status").children(".value").html("--");
 					$(".error-key").html("Compile error");
 					$(".error-message").html(response.compile_status);
 				}
@@ -160,6 +160,35 @@ $(document).ready(function(){
 				$("html, body").delay(500).animate({
 					scrollTop: $('#show-results').offset().top 
 				}, 1000);
+
+				$(".output-response-box").show();
+				$(".run-status").show();
+				$(".time-sec").show();
+				$(".memory-kb").show();
+
+				if(response.compile_status == "OK"){
+					if(response.run_status.status == "AC"){
+						$(".output-error-box").hide();
+						$(".compile-status").children(".value").html(response.compile_status);
+						$(".run-status").children(".value").html(response.run_status.status);
+						$(".time-sec").children(".value").html(response.run_status.time_used);
+						$(".memory-kb").children(".value").html(response.run_status.memory_used);
+						$(".output-o").html(response.run_status.output_html);
+					}
+					else{
+
+					}
+				}
+				else{
+					$(".output-io").show();
+					$(".output-io-info").hide();
+					$(".compile-status").children(".value").html("--");
+					$(".run-status").children(".value").html("CE");
+					$(".time-sec").children(".value").html("0.0");
+					$(".memory-kb").children(".value").html("0");
+					$(".error-key").html("Compile error");
+					$(".error-message").html(response.compile_status);
+				}
 			},
 			error: function(error){
 				console.log("run-code AJAX request failed.");
@@ -172,56 +201,6 @@ $(document).ready(function(){
 	}
 
 
-	// assigning a new key binding for shift-enter for compiling the code
-	editor.commands.addCommand({
-
-		name: 'codeCompileCommand',
-		bindKey: {win: 'Shift-Enter',  mac: 'Shift-Enter'},
-		exec: function(editor) {
-
-			console.log("Compile the code.");
-
-			compileCode();
-
-		},
-		readOnly: false // false if this command should not apply in readOnly mode
-
-	});
-
-
-	// assigning a new key binding for ctrl-enter for running the code
-	editor.commands.addCommand({
-
-		name: 'codeRunCommand',
-		bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
-		exec: function(editor) {
-
-			console.log("Run the code.");
-
-			runCode();
-
-		},
-		readOnly: false // false if this command should not apply in readOnly mode
-
-	});
-
-
-	// assigning a new key binding for ctrl-S for saving the code
-	editor.commands.addCommand({
-
-		name: 'codeSaveCommand',
-		bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
-		exec: function(editor) {
-
-			// TODO: implement code save feature
-			console.log("Save the code.");
-
-		},
-		readOnly: false // false if this command should not apply in readOnly mode
-
-	});
-
-	
 	// when show-settings is clicked
 	$("#show-settings").click(function(){
 		
@@ -329,6 +308,60 @@ $(document).ready(function(){
 		$(".custom-input-container").slideToggle();
 
 		console.log("#custom-input-container toggled.");
+
+	});
+
+
+	// assigning a new key binding for shift-enter for compiling the code
+	editor.commands.addCommand({
+
+		name: 'codeCompileCommand',
+		bindKey: {win: 'Shift-Enter',  mac: 'Shift-Enter'},
+		exec: function(editor) {
+
+			updateContent();
+			if(editorContent != ""){
+				console.log("Compile the code.");
+				compileCode();
+			}
+
+		},
+		readOnly: false // false if this command should not apply in readOnly mode
+
+	});
+
+
+	// assigning a new key binding for ctrl-enter for running the code
+	editor.commands.addCommand({
+
+		name: 'codeRunCommand',
+		bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
+		exec: function(editor) {
+
+			updateContent();
+			if(editorContent != ""){
+				runCode();
+				console.log("Run the code.");
+			}
+
+		},
+		readOnly: false // false if this command should not apply in readOnly mode
+
+	});
+
+
+	// assigning a new key binding for ctrl-S for saving the code
+	editor.commands.addCommand({
+
+		name: 'codeSaveCommand',
+		bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+		exec: function(editor) {
+
+			// TODO: implement code save feature
+			console.log("Save the code.");
+
+		},
+		readOnly: false // false if this command should not apply in readOnly mode
 
 	});
 
