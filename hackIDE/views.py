@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
-# @Last Modified by:   Sahil Dua
-# @Last Modified time: 2016-01-06 05:17:54
+# @Last Modified by:   sahildua2305
+# @Last Modified time: 2016-01-07 01:56:36
 
 
 from django.shortcuts import render
@@ -11,10 +11,11 @@ from django.http import JsonResponse, HttpResponseForbidden
 
 import requests
 
+from heCredentials import CLIENT_SECRET
+
 
 COMPILE_URL = "https://api.hackerearth.com/v3/code/compile/"
 RUN_URL = "https://api.hackerearth.com/v3/code/run/"
-CLIENT_SECRET = "61f6a3f97501c7376ce546d27c34097d15cb0856"
 
 
 """
