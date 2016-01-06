@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   Sahil Dua
-* @Last Modified time: 2016-01-06 05:26:01
+* @Last Modified time: 2016-01-06 07:07:02
 */
 
 
@@ -115,6 +115,9 @@ $(document).ready(function(){
 			},
 			error: function(error){
 				console.log("compile-code AJAX request failed.");
+
+				// Change button text when this method is called
+				$("#compile-code").html("Compile it!");
 			}
 		});
 
@@ -153,13 +156,16 @@ $(document).ready(function(){
 
 				// Change button text when this method is called
 				$("#run-code").html("Hack(run) it!");
-				
+
 				$("html, body").delay(500).animate({
 					scrollTop: $('#show-results').offset().top 
 				}, 1000);
 			},
 			error: function(error){
 				console.log("run-code AJAX request failed.");
+				
+				// Change button text when this method is called
+				$("#run-code").html("Hack(run) it!");
 			}
 		});
 
