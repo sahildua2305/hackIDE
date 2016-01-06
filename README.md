@@ -1,5 +1,5 @@
 # hackIDE
 
-A Django based online code editor inlcuding compiler as well as interpreter.
+hackIDE is an online code editor, compiler and interpreter based on Django! Go, hack it!
 
 (Work in progress)
