@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   Sahil Dua
-* @Last Modified time: 2016-01-06 05:05:44
+* @Last Modified time: 2016-01-06 05:26:01
 */
 
 
@@ -49,6 +49,7 @@ $(document).ready(function(){
 
 	// disable compile code button initially
 	$('#compile-code').prop('disabled', true);
+	$("#run-code").prop('disabled', true);
 
 
 	// function to update editorContent with current content of editor
@@ -120,6 +121,51 @@ $(document).ready(function(){
 	}
 
 
+	// function to send AJAX request to 'compile/' endpoint
+	function runCode(){
+		
+		// hide previous compile/output results
+		$(".output-response-box").hide();
+
+		// Change button text when this method is called
+		$("#run-code").html("Running..");
+
+		// take recent content of the editor for compiling
+		updateContent();
+
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+
+		var run_data = {
+			source: editorContent,
+			lang: languageSelected,
+			csrfmiddlewaretoken: csrf_token
+		};
+
+		// AJAX request to Django for compiling code
+		$.ajax({
+			url: RUN_URL,
+			type: "POST",
+			data: run_data,
+			dataType: "json",
+			success: function(response){
+				console.log("run-code AJAX request done.");
+				console.log(response);
+
+				// Change button text when this method is called
+				$("#run-code").html("Hack(run) it!");
+				
+				$("html, body").delay(500).animate({
+					scrollTop: $('#show-results').offset().top 
+				}, 1000);
+			},
+			error: function(error){
+				console.log("run-code AJAX request failed.");
+			}
+		});
+
+	}
+
+
 	// assigning a new key binding for shift-enter for compiling the code
 	editor.commands.addCommand({
 
@@ -144,8 +190,9 @@ $(document).ready(function(){
 		bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'},
 		exec: function(editor) {
 
-			// TODO: implement code run feature
 			console.log("Run the code.");
+
+			runCode();
 
 		},
 		readOnly: false // false if this command should not apply in readOnly mode
@@ -257,12 +304,14 @@ $(document).ready(function(){
 
 		updateContent();
 
-		// disable compile button when editor is empty
+		// disable compile & run buttons when editor is empty
 		if(editorContent != ""){
 			$("#compile-code").prop('disabled', false);
+			$("#run-code").prop('disabled', false);
 		}
 		else{
 			$("#compile-code").prop('disabled', true);
+			$("#run-code").prop('disabled', true);
 		}
 
 	});
@@ -301,9 +350,9 @@ $(document).ready(function(){
 	// when run-code is clicked
 	$("#run-code").click(function(){
 
-		// TODO: implement run code feature
-
 		console.log("#run-code clicked.");
+
+		runCode();
 
 	});
 
