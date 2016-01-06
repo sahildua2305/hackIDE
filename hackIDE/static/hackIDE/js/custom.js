@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-06 21:31:12
+* @Last Modified time: 2016-01-07 02:16:57
 */
 
 
@@ -107,6 +107,7 @@ $(document).ready(function(){
 				}
 				else{
 					$(".output-io").show();
+					$(".output-error-box").show();
 					$(".output-io-info").hide();
 					$(".compile-status").children(".value").html("--");
 					$(".error-key").html("Compile error");
@@ -168,7 +169,9 @@ $(document).ready(function(){
 
 				if(response.compile_status == "OK"){
 					if(response.run_status.status == "AC"){
+						$(".output-io").show();
 						$(".output-error-box").hide();
+						$(".output-io-info").show();
 						$(".compile-status").children(".value").html(response.compile_status);
 						$(".run-status").children(".value").html(response.run_status.status);
 						$(".time-sec").children(".value").html(response.run_status.time_used);
@@ -176,7 +179,14 @@ $(document).ready(function(){
 						$(".output-o").html(response.run_status.output_html);
 					}
 					else{
-
+						$(".output-io").show();
+						$(".output-error-box").show();
+						$(".compile-status").children(".value").html(response.compile_status);
+						$(".run-status").children(".value").html(response.run_status.status);
+						$(".time-sec").children(".value").html(response.run_status.time_used);
+						$(".memory-kb").children(".value").html(response.run_status.memory_used);
+						$(".error-key").html("Run-time error (stderr)");
+						$(".error-message").html(response.run_status.stderr);
 					}
 				}
 				else{

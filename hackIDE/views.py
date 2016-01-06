@@ -3,7 +3,7 @@
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
 # @Last Modified by:   sahildua2305
-# @Last Modified time: 2016-01-07 01:56:36
+# @Last Modified time: 2016-01-07 02:24:48
 
 
 from django.shortcuts import render
@@ -26,7 +26,12 @@ def index(request):
 	# render the index.html
 	return render(request, 'hackIDE/index.html', {})
 
+
 """
+Method catering to AJAX call at /ide/compile/ endpoint,
+makes call at HackerEarth's /compile/ endpoint and returns the compile result as a JsonResponse object
+
+TODO: add request.isAJAX() check (not sure whether that's required here or not as of now)
 """
 def compileCode(request):
 	try:
@@ -36,11 +41,6 @@ def compileCode(request):
 		# TODO: handle error
 		return HttpResponseForbidden()
 	else:
-		# # default value of 5 sec, if not set
-		# time_limit = request.POST.get('time_limit', 5)
-		# # default value of 262144KB (256MB), if not set
-		# memory_limit = request.POST.get('memory_limit', 262144)
-
 		compile_data = {
 			'client_secret': CLIENT_SECRET,
 			'async': 0,
@@ -54,6 +54,10 @@ def compileCode(request):
 
 
 """
+Method catering to AJAX call at /ide/run/ endpoint,
+makes call at HackerEarth's /run/ endpoint and returns the run result as a JsonResponse object
+
+TODO: add request.isAJAX() check (not sure whether that's required here or not as of now)
 """
 def runCode(request):
 	try:
@@ -76,6 +80,8 @@ def runCode(request):
 			'time_limit': time_limit,
 			'memory_limit': memory_limit,
 		}
+
+		# TODO: add check for input, if present add it to the run_data for sending that along with call to HackerEarth API
 
 		r = requests.post(RUN_URL, data=run_data)
 		print r.json()

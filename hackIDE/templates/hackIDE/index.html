@@ -16,6 +16,9 @@
     </head>
     <body>
 
+        <!-- Hidden input field containing CSRF token required for making AJAX calls to Django -->
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+
 		<nav class="navbar navbar-default">
 			<div class="container">
 				<div class="navbar-header">
@@ -149,12 +152,12 @@
                                 <pre class="error-message"></pre>
                             </div>
     						<div class="output-io-info output-i-info">
-    							<div class="key"> Input (stdin) </div>
+    							<div class="key">Input (stdin)</div>
     							<pre class="output-text output-i"> </pre>
     							<span class="output-empty-message output-i-message"><i>Standard input is empty</i></span>
     						</div>
     						<div class="output-io-info output-o-info">
-    							<div class="key"> Output (stdout) </div>
+    							<div class="key">Output (stdout)</div>
     							<pre class="output-text output-o"> </pre>
     							<span class="output-empty-message output-o-message"><i>Standard output is empty</i></span>
     						</div>
@@ -171,7 +174,6 @@
     		<span class="pull-right"> Copyrights © <a href="http://sahildua.com" target="_blank">Sahil Dua</a> 2016 | Made with <span style="color: #f7403a">&hearts;</span> in India </span>
     	</footer>
 
-    	<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
 
     	<!-- jQuery -->
     	<script src="{% static 'hackIDE/js/jquery.min.js' %}" type="text/javascript" charset="utf-8"></script>
