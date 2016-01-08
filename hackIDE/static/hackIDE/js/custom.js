@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-07 02:16:57
+* @Last Modified time: 2016-01-08 04:54:03
 */
 
 
@@ -52,14 +52,20 @@ $(document).ready(function(){
 	$("#run-code").prop('disabled', true);
 
 
-	// function to update editorContent with current content of editor
+	/**
+	 * function to update editorContent with current content of editor
+	 * 
+	 */
 	function updateContent(){
 		editorContent = editor.getValue();
 		console.log("Updated Content:\n" + editorContent);
 	}
 
 
-	// function to send AJAX request to 'compile/' endpoint
+	/**
+	 * function to send AJAX request to 'compile/' endpoint
+	 * 
+	 */
 	function compileCode(){
 		
 		// hide previous compile/output results
@@ -125,7 +131,10 @@ $(document).ready(function(){
 	}
 
 
-	// function to send AJAX request to 'compile/' endpoint
+	/**
+	 * function to send AJAX request to 'compile/' endpoint
+	 * 
+	 */
 	function runCode(){
 		
 		// hide previous compile/output results

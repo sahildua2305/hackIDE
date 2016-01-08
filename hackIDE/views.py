@@ -3,7 +3,7 @@
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
 # @Last Modified by:   sahildua2305
-# @Last Modified time: 2016-01-07 02:24:48
+# @Last Modified time: 2016-01-08 08:59:25
 
 
 from django.shortcuts import render
@@ -62,6 +62,8 @@ TODO: add request.isAJAX() check (not sure whether that's required here or not a
 def runCode(request):
 	try:
 		source = request.POST['source']
+		if(source == ""):
+			raise Exception('Blank Source Found')
 		lang = request.POST['lang']
 	except KeyError:
 		# TODO: handle error
