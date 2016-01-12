@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-08 04:54:03
+* @Last Modified time: 2016-01-12 06:55:56
 */
 
 
@@ -49,7 +49,9 @@ $(document).ready(function(){
 
 	// disable compile code button initially
 	$('#compile-code').prop('disabled', true);
+	$('#compile-code').prop('title', "Editor has no code");
 	$("#run-code").prop('disabled', true);
+	$('#run-code').prop('title', "Editor has no code");
 
 
 	/**
@@ -91,6 +93,7 @@ $(document).ready(function(){
 			type: "POST",
 			data: compile_data,
 			dataType: "json",
+			timeout: 10000,
 			success: function(response){
 				console.log("compile-code AJAX request done.");
 				console.log(response);
@@ -107,17 +110,27 @@ $(document).ready(function(){
 				$(".time-sec").hide();
 				$(".memory-kb").hide();
 
-				if(response.compile_status == "OK"){
-					$(".output-io").hide();
-					$(".compile-status").children(".value").html("OK");
+				if(response.message == undefined){
+					if(response.compile_status == "OK"){
+						$(".output-io").hide();
+						$(".compile-status").children(".value").html("OK");
+					}
+					else{
+						$(".output-io").show();
+						$(".output-error-box").show();
+						$(".output-io-info").hide();
+						$(".compile-status").children(".value").html("--");
+						$(".error-key").html("Compile error");
+						$(".error-message").html(response.compile_status);
+					}
 				}
 				else{
 					$(".output-io").show();
 					$(".output-error-box").show();
 					$(".output-io-info").hide();
 					$(".compile-status").children(".value").html("--");
-					$(".error-key").html("Compile error");
-					$(".error-message").html(response.compile_status);
+					$(".error-key").html("Server error");
+					$(".error-message").html(response.message);
 				}
 			},
 			error: function(error){
@@ -125,6 +138,23 @@ $(document).ready(function(){
 
 				// Change button text when this method is called
 				$("#compile-code").html("Compile it!");
+
+
+				$("html, body").delay(500).animate({
+					scrollTop: $('#show-results').offset().top 
+				}, 1000);
+
+				$(".output-response-box").show();
+				$(".run-status").hide();
+				$(".time-sec").hide();
+				$(".memory-kb").hide();
+
+				$(".output-io").show();
+				$(".output-error-box").show();
+				$(".output-io-info").hide();
+				$(".compile-status").children(".value").html("--");
+				$(".error-key").html("Server error");
+				$(".error-message").html("Server couldn't complete request. Please try again!");
 			}
 		});
 
@@ -154,68 +184,182 @@ $(document).ready(function(){
 			csrfmiddlewaretoken: csrf_token
 		};
 
-		// AJAX request to Django for compiling code
-		$.ajax({
-			url: RUN_URL,
-			type: "POST",
-			data: run_data,
-			dataType: "json",
-			success: function(response){
-				console.log("run-code AJAX request done.");
-				console.log(response);
+		var input_given = $("#custom-input").val();
+		console.log(input_given);
 
-				// Change button text when this method is called
-				$("#run-code").html("Hack(run) it!");
+		if( $("#custom-input-checkbox").prop('checked') == true ){
+			// AJAX request to Django for running code with input
+			$.ajax({
+				url: RUN_URL,
+				type: "POST",
+				data: run_data,
+				input: input_given,
+				dataType: "json",
+				timeout: 10000,
+				success: function(response){
+					console.log("run-code AJAX request done.");
+					console.log(response);
 
-				$("html, body").delay(500).animate({
-					scrollTop: $('#show-results').offset().top 
-				}, 1000);
+					// Change button text when this method is called
+					$("#run-code").html("Hack(run) it!");
 
-				$(".output-response-box").show();
-				$(".run-status").show();
-				$(".time-sec").show();
-				$(".memory-kb").show();
+					$("html, body").delay(500).animate({
+						scrollTop: $('#show-results').offset().top 
+					}, 1000);
 
-				if(response.compile_status == "OK"){
-					if(response.run_status.status == "AC"){
-						$(".output-io").show();
-						$(".output-error-box").hide();
-						$(".output-io-info").show();
-						$(".compile-status").children(".value").html(response.compile_status);
-						$(".run-status").children(".value").html(response.run_status.status);
-						$(".time-sec").children(".value").html(response.run_status.time_used);
-						$(".memory-kb").children(".value").html(response.run_status.memory_used);
-						$(".output-o").html(response.run_status.output_html);
+					$(".output-response-box").show();
+					$(".run-status").show();
+					$(".time-sec").show();
+					$(".memory-kb").show();
+
+					if(response.compile_status == "OK"){
+						if(response.run_status.status == "AC"){
+							$(".output-io").show();
+							$(".output-error-box").hide();
+							$(".output-io-info").show();
+							$(".compile-status").children(".value").html(response.compile_status);
+							$(".run-status").children(".value").html(response.run_status.status);
+							$(".time-sec").children(".value").html(response.run_status.time_used);
+							$(".memory-kb").children(".value").html(response.run_status.memory_used);
+							$(".output-o").html(response.run_status.output_html);
+							$(".output-i").html(input_given);
+						}
+						else{
+							$(".output-io").show();
+							$(".output-io-info").hide();
+							$(".output-error-box").show();
+							$(".compile-status").children(".value").html(response.compile_status);
+							$(".run-status").children(".value").html(response.run_status.status);
+							$(".time-sec").children(".value").html(response.run_status.time_used);
+							$(".memory-kb").children(".value").html(response.run_status.memory_used);
+							$(".error-key").html("Run-time error (stderr)");
+							$(".error-message").html(response.run_status.stderr);
+						}
 					}
 					else{
 						$(".output-io").show();
-						$(".output-error-box").show();
-						$(".compile-status").children(".value").html(response.compile_status);
-						$(".run-status").children(".value").html(response.run_status.status);
-						$(".time-sec").children(".value").html(response.run_status.time_used);
-						$(".memory-kb").children(".value").html(response.run_status.memory_used);
-						$(".error-key").html("Run-time error (stderr)");
-						$(".error-message").html(response.run_status.stderr);
+						$(".output-io-info").hide();
+						$(".compile-status").children(".value").html("--");
+						$(".run-status").children(".value").html("CE");
+						$(".time-sec").children(".value").html("0.0");
+						$(".memory-kb").children(".value").html("0");
+						$(".error-key").html("Compile error");
+						$(".error-message").html(response.compile_status);
 					}
-				}
-				else{
+				},
+				error: function(error){
+					console.log("run-code AJAX request failed.");
+					
+					// Change button text when this method is called
+					$("#run-code").html("Hack(run) it!");
+
+
+					$("html, body").delay(500).animate({
+						scrollTop: $('#show-results').offset().top 
+					}, 1000);
+
+					$(".output-response-box").show();
+					$(".run-status").show();
+					$(".time-sec").show();
+					$(".memory-kb").show();
+
 					$(".output-io").show();
 					$(".output-io-info").hide();
 					$(".compile-status").children(".value").html("--");
-					$(".run-status").children(".value").html("CE");
+					$(".run-status").children(".value").html("--");
 					$(".time-sec").children(".value").html("0.0");
 					$(".memory-kb").children(".value").html("0");
-					$(".error-key").html("Compile error");
-					$(".error-message").html(response.compile_status);
+					$(".error-key").html("Server error");
+					$(".error-message").html("Server couldn't complete request. Please try again!");
 				}
-			},
-			error: function(error){
-				console.log("run-code AJAX request failed.");
-				
-				// Change button text when this method is called
-				$("#run-code").html("Hack(run) it!");
-			}
-		});
+			});
+		}
+		else{
+			// AJAX request to Django for running code without input
+			$.ajax({
+				url: RUN_URL,
+				type: "POST",
+				data: run_data,
+				dataType: "json",
+				timeout: 10000,
+				success: function(response){
+					console.log("run-code AJAX request done.");
+					console.log(response);
+
+					// Change button text when this method is called
+					$("#run-code").html("Hack(run) it!");
+
+					$("html, body").delay(500).animate({
+						scrollTop: $('#show-results').offset().top 
+					}, 1000);
+
+					$(".output-response-box").show();
+					$(".run-status").show();
+					$(".time-sec").show();
+					$(".memory-kb").show();
+
+					if(response.compile_status == "OK"){
+						if(response.run_status.status == "AC"){
+							$(".output-io").show();
+							$(".output-error-box").hide();
+							$(".output-io-info").show();
+							$(".output-i-info").hide();
+							$(".compile-status").children(".value").html(response.compile_status);
+							$(".run-status").children(".value").html(response.run_status.status);
+							$(".time-sec").children(".value").html(response.run_status.time_used);
+							$(".memory-kb").children(".value").html(response.run_status.memory_used);
+							$(".output-o").html(response.run_status.output_html);
+						}
+						else{
+							$(".output-io").show();
+							$(".output-io-info").hide();
+							$(".output-error-box").show();
+							$(".compile-status").children(".value").html(response.compile_status);
+							$(".run-status").children(".value").html(response.run_status.status);
+							$(".time-sec").children(".value").html(response.run_status.time_used);
+							$(".memory-kb").children(".value").html(response.run_status.memory_used);
+							$(".error-key").html("Run-time error (stderr)");
+							$(".error-message").html(response.run_status.stderr);
+						}
+					}
+					else{
+						$(".output-io").show();
+						$(".output-io-info").hide();
+						$(".compile-status").children(".value").html("--");
+						$(".run-status").children(".value").html("CE");
+						$(".time-sec").children(".value").html("0.0");
+						$(".memory-kb").children(".value").html("0");
+						$(".error-key").html("Compile error");
+						$(".error-message").html(response.compile_status);
+					}
+				},
+				error: function(error){
+					console.log("run-code AJAX request failed.");
+					
+					// Change button text when this method is called
+					$("#run-code").html("Hack(run) it!");
+
+
+					$("html, body").delay(500).animate({
+						scrollTop: $('#show-results').offset().top 
+					}, 1000);
+
+					$(".output-response-box").show();
+					$(".run-status").show();
+					$(".time-sec").show();
+					$(".memory-kb").show();
+
+					$(".output-io").show();
+					$(".output-io-info").hide();
+					$(".compile-status").children(".value").html("--");
+					$(".run-status").children(".value").html("--");
+					$(".time-sec").children(".value").html("0.0");
+					$(".memory-kb").children(".value").html("0");
+					$(".error-key").html("Server error");
+					$(".error-message").html("Server couldn't complete request. Please try again!");
+				}
+			});
+		}
 
 	}
 
@@ -311,11 +455,15 @@ $(document).ready(function(){
 		// disable compile & run buttons when editor is empty
 		if(editorContent != ""){
 			$("#compile-code").prop('disabled', false);
+			$('#compile-code').prop('title', "Press Shift+Enter");
 			$("#run-code").prop('disabled', false);
+			$('#run-code').prop('title', "Press Ctrl+Enter");
 		}
 		else{
 			$("#compile-code").prop('disabled', true);
+			$('#compile-code').prop('title', "Editor has no code");
 			$("#run-code").prop('disabled', true);
+			$('#run-code').prop('title', "Editor has no code");
 		}
 
 	});
@@ -365,32 +513,6 @@ $(document).ready(function(){
 
 		},
 		readOnly: false // false if this command should not apply in readOnly mode
-
-	});
-
-
-	// assigning a new key binding for ctrl-S for saving the code
-	editor.commands.addCommand({
-
-		name: 'codeSaveCommand',
-		bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
-		exec: function(editor) {
-
-			// TODO: implement code save feature
-			console.log("Save the code.");
-
-		},
-		readOnly: false // false if this command should not apply in readOnly mode
-
-	});
-
-
-	// when save-code is clicked
-	$("#save-code").click(function(){
-
-		// TODO: implement save code feature
-		
-		console.log("#save-code clicked.");
 
 	});
 

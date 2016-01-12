@@ -3,7 +3,7 @@
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
 # @Last Modified by:   sahildua2305
-# @Last Modified time: 2016-01-08 08:59:25
+# @Last Modified time: 2016-01-12 06:34:24
 
 
 from django.shortcuts import render
@@ -16,6 +16,40 @@ from heCredentials import CLIENT_SECRET
 
 COMPILE_URL = "https://api.hackerearth.com/v3/code/compile/"
 RUN_URL = "https://api.hackerearth.com/v3/code/run/"
+
+permitted_languages = ["C", "CPP", "CSHARP", "CLOJURE", "CSS", "HASKELL", "JAVA", "JAVASCRIPT", "OBJECTIVEC", "PERL", "PHP", "PYTHON", "R", "RUBY", "RUST", "SCALA"]
+
+
+"""
+Check if source given with the request is empty
+"""
+def source_empty_check(source):
+	if source == "":
+		response = {
+			"message" : "Source can't be empty!",
+		}
+		return JsonResponse(response, safe=False)
+
+
+"""
+Check if lang given with the request is valid one or not
+"""
+def lang_valid_check(lang):
+	if lang not in permitted_languages:
+		response = {
+			"message" : "Invalid language - not supported!",
+		}
+		return JsonResponse(response, safe=False)
+
+
+"""
+Handle case when at least one of the keys (lang or source) is absent
+"""
+def missing_argument_error():
+	response = {
+		"message" : "ArgumentMissingError: insufficient arguments for compilation!",
+	}
+	return JsonResponse(response, safe=False)
 
 
 """
@@ -36,10 +70,17 @@ TODO: add request.isAJAX() check (not sure whether that's required here or not a
 def compileCode(request):
 	try:
 		source = request.POST['source']
+		# Handle Empty Source Case
+		source_empty_check(source)
+		
 		lang = request.POST['lang']
+		# Handle Invalid Language Case
+		lang_valid_check(lang)
+
 	except KeyError:
-		# TODO: handle error
-		return HttpResponseForbidden()
+		# Handle case when at least one of the keys (lang or source) is absent
+		missing_argument_error()
+
 	else:
 		compile_data = {
 			'client_secret': CLIENT_SECRET,
@@ -49,7 +90,6 @@ def compileCode(request):
 		}
 
 		r = requests.post(COMPILE_URL, data=compile_data)
-		print r.json()
 		return JsonResponse(r.json(), safe=False)
 
 
@@ -62,12 +102,17 @@ TODO: add request.isAJAX() check (not sure whether that's required here or not a
 def runCode(request):
 	try:
 		source = request.POST['source']
-		if(source == ""):
-			raise Exception('Blank Source Found')
+		# Handle Empty Source Case
+		source_empty_check(source)
+		
 		lang = request.POST['lang']
+		# Handle Invalid Language Case
+		lang_valid_check(lang)
+
 	except KeyError:
-		# TODO: handle error
-		return HttpResponseForbidden()
+		# Handle case when at least one of the keys (lang or source) is absent
+		missing_argument_error()
+
 	else:
 		# default value of 5 sec, if not set
 		time_limit = request.POST.get('time_limit', 5)
@@ -83,8 +128,12 @@ def runCode(request):
 			'memory_limit': memory_limit,
 		}
 
-		# TODO: add check for input, if present add it to the run_data for sending that along with call to HackerEarth API
+		# if input is present in the request
+		if 'input' in request.POST:
+			run_data.input = request.POST['input']
 
+		"""
+		Make call to /run/ endpoint of HackerEarth API
+		"""
 		r = requests.post(RUN_URL, data=run_data)
-		print r.json()
 		return JsonResponse(r.json(), safe=False)

@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
-# @Last Modified by:   Sahil Dua
-# @Last Modified time: 2016-01-08 09:01:47
+# @Last Modified by:   sahildua2305
+# @Last Modified time: 2016-01-12 05:49:53
 
 
 from django.test import TestCase
@@ -21,3 +21,8 @@ class IndexViewTests(TestCase):
 		self.assertContains(response, "hackIDE")
 		self.assertContains(response, "Use custom input to test the code")
 		self.assertContains(response, "Powered by")
+
+
+"""
+TODO: Write some Selenium tests - testing UI for different features
+"""
