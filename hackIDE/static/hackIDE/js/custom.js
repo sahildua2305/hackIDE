@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-12 06:55:56
+* @Last Modified time: 2016-01-12 07:13:23
 */
 
 
@@ -61,6 +61,24 @@ $(document).ready(function(){
 	function updateContent(){
 		editorContent = editor.getValue();
 		console.log("Updated Content:\n" + editorContent);
+	}
+
+
+	/**
+	 * function to download a file with given filename with text as it's contents
+	 * 
+	 */
+	function downloadFile(filename, text) {
+		var element = document.createElement('a');
+		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+		element.setAttribute('download', filename);
+
+		element.style.display = 'none';
+		document.body.appendChild(element);
+
+		element.click();
+
+		document.body.removeChild(element);
 	}
 
 
@@ -389,6 +407,8 @@ $(document).ready(function(){
 	$("#download-code").click(function(){
 
 		// TODO: implement download code feature
+		updateContent();
+		downloadFile("code", editorContent);
 
 		console.log("#download-code clicked.");
 
