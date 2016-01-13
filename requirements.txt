@@ -1,5 +1,5 @@
 Babel==2.1.1
-Django==1.6.1
+Django==1.9.1
 Jinja2==2.8
 MarkupSafe==0.23
 MySQL-python==1.2.3
