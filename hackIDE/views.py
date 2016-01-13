@@ -3,7 +3,7 @@
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
 # @Last Modified by:   sahildua2305
-# @Last Modified time: 2016-01-12 06:34:24
+# @Last Modified time: 2016-01-14 02:59:49
 
 
 from django.shortcuts import render
@@ -64,8 +64,6 @@ def index(request):
 """
 Method catering to AJAX call at /ide/compile/ endpoint,
 makes call at HackerEarth's /compile/ endpoint and returns the compile result as a JsonResponse object
-
-TODO: add request.isAJAX() check (not sure whether that's required here or not as of now)
 """
 def compileCode(request):
 	try:
@@ -96,8 +94,6 @@ def compileCode(request):
 """
 Method catering to AJAX call at /ide/run/ endpoint,
 makes call at HackerEarth's /run/ endpoint and returns the run result as a JsonResponse object
-
-TODO: add request.isAJAX() check (not sure whether that's required here or not as of now)
 """
 def runCode(request):
 	try:
@@ -130,7 +126,7 @@ def runCode(request):
 
 		# if input is present in the request
 		if 'input' in request.POST:
-			run_data.input = request.POST['input']
+			run_data['input'] = request.POST['input']
 
 		"""
 		Make call to /run/ endpoint of HackerEarth API

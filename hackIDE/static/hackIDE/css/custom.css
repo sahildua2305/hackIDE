@@ -1,8 +1,8 @@
 /* 
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:00
-* @Last Modified by:   Sahil Dua
-* @Last Modified time: 2016-01-06 07:02:54
+* @Last Modified by:   sahildua2305
+* @Last Modified time: 2016-01-14 03:03:07
 */
 
 
@@ -102,7 +102,7 @@ pre {
 
 #settings-pane {
 	position: absolute;
-	right: -0.5em;
+	right: -0.8em;
 	top: 2.3em;
 	z-index: 9;
 	border: 1px solid rgb(221, 221, 221);
@@ -121,7 +121,7 @@ pre {
 #inner-settings-pane {
 	position: absolute;
     width: 0;
-    right: 1em;
+    right: 1.5em;
     height: 0;
     border-left: 7px solid transparent;
     border-right: 7px solid transparent;

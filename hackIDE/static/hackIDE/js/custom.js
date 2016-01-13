@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-12 07:19:49
+* @Last Modified time: 2016-01-14 03:04:19
 */
 
 
@@ -180,7 +180,7 @@ $(document).ready(function(){
 
 
 	/**
-	 * function to send AJAX request to 'compile/' endpoint
+	 * function to send AJAX request to 'run/' endpoint
 	 * 
 	 */
 	function runCode(){
@@ -196,22 +196,21 @@ $(document).ready(function(){
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
 
-		var run_data = {
-			source: editorContent,
-			lang: languageSelected,
-			csrfmiddlewaretoken: csrf_token
-		};
-
 		var input_given = $("#custom-input").val();
 		console.log(input_given);
 
 		if( $("#custom-input-checkbox").prop('checked') == true ){
+			var run_data = {
+				source: editorContent,
+				lang: languageSelected,
+				input: input_given,
+				csrfmiddlewaretoken: csrf_token
+			};
 			// AJAX request to Django for running code with input
 			$.ajax({
 				url: RUN_URL,
 				type: "POST",
 				data: run_data,
-				input: input_given,
 				dataType: "json",
 				timeout: 10000,
 				success: function(response){
@@ -293,6 +292,11 @@ $(document).ready(function(){
 			});
 		}
 		else{
+			var run_data = {
+				source: editorContent,
+				lang: languageSelected,
+				csrfmiddlewaretoken: csrf_token
+			};
 			// AJAX request to Django for running code without input
 			$.ajax({
 				url: RUN_URL,
