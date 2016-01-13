@@ -7,7 +7,6 @@ Pillow==2.3.0
 PyPDF2==1.25.1
 Pygments==2.0.2
 Sphinx==1.3.3
-Twisted-Web==13.2.0
 adium-theme-ubuntu==0.3.4
 alabaster==0.7.7
 apt-xapian-index==0.45
