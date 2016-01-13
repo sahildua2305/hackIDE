@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-12 07:13:23
+* @Last Modified time: 2016-01-12 07:19:49
 */
 
 
@@ -30,7 +30,7 @@ $(document).ready(function(){
 	var editor = ace.edit("editor");
 
 	// initial configuration of the editor
-	editor.setTheme("ace/theme/dawn");
+	editor.setTheme("ace/theme/twilight");
 	editor.session.setMode("ace/mode/c_cpp");
 	editor.getSession().setTabSize(indentSpaces);
 	editorContent = editor.getValue();
