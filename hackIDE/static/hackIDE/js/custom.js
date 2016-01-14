@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-14 03:04:19
+* @Last Modified time: 2016-01-14 19:47:59
 */
 
 
@@ -60,7 +60,6 @@ $(document).ready(function(){
 	 */
 	function updateContent(){
 		editorContent = editor.getValue();
-		console.log("Updated Content:\n" + editorContent);
 	}
 
 
@@ -113,8 +112,6 @@ $(document).ready(function(){
 			dataType: "json",
 			timeout: 10000,
 			success: function(response){
-				console.log("compile-code AJAX request done.");
-				console.log(response);
 
 				// Change button text when this method is called
 				$("#compile-code").html("Compile it!");
@@ -152,7 +149,6 @@ $(document).ready(function(){
 				}
 			},
 			error: function(error){
-				console.log("compile-code AJAX request failed.");
 
 				// Change button text when this method is called
 				$("#compile-code").html("Compile it!");
@@ -197,7 +193,6 @@ $(document).ready(function(){
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
 
 		var input_given = $("#custom-input").val();
-		console.log(input_given);
 
 		if( $("#custom-input-checkbox").prop('checked') == true ){
 			var run_data = {
@@ -214,8 +209,6 @@ $(document).ready(function(){
 				dataType: "json",
 				timeout: 10000,
 				success: function(response){
-					console.log("run-code AJAX request done.");
-					console.log(response);
 
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
@@ -265,7 +258,6 @@ $(document).ready(function(){
 					}
 				},
 				error: function(error){
-					console.log("run-code AJAX request failed.");
 					
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
@@ -305,8 +297,6 @@ $(document).ready(function(){
 				dataType: "json",
 				timeout: 10000,
 				success: function(response){
-					console.log("run-code AJAX request done.");
-					console.log(response);
 
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
@@ -356,7 +346,6 @@ $(document).ready(function(){
 					}
 				},
 				error: function(error){
-					console.log("run-code AJAX request failed.");
 					
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
@@ -389,8 +378,6 @@ $(document).ready(function(){
 	// when show-settings is clicked
 	$("#show-settings").click(function(){
 		
-		console.log("#show-settings clicked.");
-		
 		if(settingsPaneVisible){
 			// hide settings-pane
 			$("#settings-pane").hide();
@@ -414,8 +401,6 @@ $(document).ready(function(){
 		updateContent();
 		downloadFile("code", editorContent);
 
-		console.log("#download-code clicked.");
-
 	});
 
 
@@ -431,8 +416,6 @@ $(document).ready(function(){
 		else{
 			editor.getSession().setMode("ace/mode/" + languageSelected.toLowerCase());
 		}
-
-		console.log("Language changed to " + languageSelected + ".");
 
 	});
 
@@ -450,8 +433,6 @@ $(document).ready(function(){
 			editor.setTheme("ace/theme/dawn");
 		}
 
-		console.log("Editor-theme changed to " + editorThemeSelected + ".");
-
 	});
 
 
@@ -463,7 +444,6 @@ $(document).ready(function(){
 		// update the indent size for the editor
 		if(indentSpaces != ""){
 			editor.getSession().setTabSize(indentSpaces);
-			console.log("Indent-Spaces value changed to " + indentSpaces + ".");
 		}
 
 	});
@@ -471,8 +451,6 @@ $(document).ready(function(){
 
 	// to listen for a change in contents of the editor
 	editor.getSession().on('change', function(e) {
-
-		console.log("Contents of editor changed.");
 
 		updateContent();
 
@@ -498,8 +476,6 @@ $(document).ready(function(){
 
 		$(".custom-input-container").slideToggle();
 
-		console.log("#custom-input-container toggled.");
-
 	});
 
 
@@ -512,7 +488,6 @@ $(document).ready(function(){
 
 			updateContent();
 			if(editorContent != ""){
-				console.log("Compile the code.");
 				compileCode();
 			}
 
@@ -532,7 +507,6 @@ $(document).ready(function(){
 			updateContent();
 			if(editorContent != ""){
 				runCode();
-				console.log("Run the code.");
 			}
 
 		},
@@ -544,8 +518,6 @@ $(document).ready(function(){
 	// when compile-code is clicked
 	$("#compile-code").click(function(){
 
-		console.log("#compile-code clicked.");
-
 		compileCode();
 
 	});
@@ -553,8 +525,6 @@ $(document).ready(function(){
 
 	// when run-code is clicked
 	$("#run-code").click(function(){
-
-		console.log("#run-code clicked.");
 
 		runCode();
 
