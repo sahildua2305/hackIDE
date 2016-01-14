@@ -1,1 +1,1 @@
-web: gunicorn hackIDE_project.wsgi
+web: gunicorn hackIDE_project.wsgi --log-file=-
