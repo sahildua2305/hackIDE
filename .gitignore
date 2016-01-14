@@ -59,4 +59,4 @@ docs/_build/
 target/
 
 # heCredentials (CLIENT_SECRET)
-heCredentials.py
+# heCredentials.py
