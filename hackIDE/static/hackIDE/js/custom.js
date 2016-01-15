@@ -460,20 +460,7 @@ $(document).ready(function(){
 
 	// when show-settings is clicked
 	$("#show-settings").click(function(){
-
-		if(settingsPaneVisible){
-			// hide settings-pane
-			$("#settings-pane").hide();
-			// update flag
-			settingsPaneVisible = false;
-		}
-		else{
-			// hide settings-pane
-			$("#settings-pane").show();
-			// update flag
-			settingsPaneVisible = true;
-		}
-
+			$("#settings-pane").toggle();  // toggle visibility of the pane
 	});
 
 
