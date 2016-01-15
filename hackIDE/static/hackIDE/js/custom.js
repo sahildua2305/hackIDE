@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-15 14:43:30
+* @Last Modified time: 2016-01-15 15:17:20
 */
 
 
@@ -22,6 +22,9 @@ $(document).ready(function(){
 	// HackerEarth API endpoints
 	var COMPILE_URL = "compile/"
 	var RUN_URL = "run/"
+
+	// flag to block requests when a request is running
+	var request_ongoing = false;
 
 
 	// trigger extension
@@ -114,11 +117,19 @@ $(document).ready(function(){
 	 */
 	function compileCode(){
 
+		// if a compile request is ongoing
+		if(request_ongoing)
+			return;
+
 		// hide previous compile/output results
 		$(".output-response-box").hide();
 
 		// Change button text when this method is called
 		$("#compile-code").html("Compiling..");
+
+		// disable buttons when this method is called
+		$("#compile-code").prop('disabled', true);
+		$("#run-code").prop('disabled', true);
 
 		// take recent content of the editor for compiling
 		updateContent();
@@ -131,6 +142,8 @@ $(document).ready(function(){
 			csrfmiddlewaretoken: csrf_token
 		};
 
+		request_ongoing = true;
+
 		// AJAX request to Django for compiling code
 		$.ajax({
 			url: COMPILE_URL,
@@ -140,8 +153,14 @@ $(document).ready(function(){
 			timeout: 10000,
 			success: function(response){
 
+				request_ongoing = false;
+
 				// Change button text when this method is called
 				$("#compile-code").html("Compile it!");
+
+				// enable button when this method is called
+				$("#compile-code").prop('disabled', false);
+				$("#run-code").prop('disabled', false);
 
 				$("html, body").delay(500).animate({
 					scrollTop: $('#show-results').offset().top
@@ -177,9 +196,14 @@ $(document).ready(function(){
 			},
 			error: function(error){
 
+				request_ongoing = false;
+
 				// Change button text when this method is called
 				$("#compile-code").html("Compile it!");
 
+				// enable button when this method is called
+				$("#compile-code").prop('disabled', false);
+				$("#run-code").prop('disabled', false);
 
 				$("html, body").delay(500).animate({
 					scrollTop: $('#show-results').offset().top
@@ -208,11 +232,19 @@ $(document).ready(function(){
 	 */
 	function runCode(){
 
+		// if a run request is ongoing
+		if(request_ongoing)
+			return;
+
 		// hide previous compile/output results
 		$(".output-response-box").hide();
 
 		// Change button text when this method is called
 		$("#run-code").html("Running..");
+
+		// disable button when this method is called
+		$("#compile-code").prop('disabled', true);
+		$("#run-code").prop('disabled', true);
 
 		// take recent content of the editor for compiling
 		updateContent();
@@ -220,6 +252,8 @@ $(document).ready(function(){
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
 
 		var input_given = $("#custom-input").val();
+
+		request_ongoing = true;
 
 		if( $("#custom-input-checkbox").prop('checked') == true ){
 			var run_data = {
@@ -237,8 +271,14 @@ $(document).ready(function(){
 				timeout: 10000,
 				success: function(response){
 
+					request_ongoing = false;
+
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
+
+					// enable button when this method is called
+					$("#compile-code").prop('disabled', false);
+					$("#run-code").prop('disabled', false);
 
 					$("html, body").delay(500).animate({
 						scrollTop: $('#show-results').offset().top
@@ -286,9 +326,14 @@ $(document).ready(function(){
 				},
 				error: function(error){
 
+					request_ongoing = false;
+
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
 
+					// enable button when this method is called
+					$("#compile-code").prop('disabled', false);
+					$("#run-code").prop('disabled', false);
 
 					$("html, body").delay(500).animate({
 						scrollTop: $('#show-results').offset().top
@@ -325,8 +370,14 @@ $(document).ready(function(){
 				timeout: 10000,
 				success: function(response){
 
+					request_ongoing = false;
+
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
+
+					// enable button when this method is called
+					$("#compile-code").prop('disabled', false);
+					$("#run-code").prop('disabled', false);
 
 					$("html, body").delay(500).animate({
 						scrollTop: $('#show-results').offset().top
@@ -374,10 +425,15 @@ $(document).ready(function(){
 				},
 				error: function(error){
 
+					request_ongoing = false;
+
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
 
-
+					// enable button when this method is called
+					$("#compile-code").prop('disabled', false);
+					$("#run-code").prop('disabled', false);
+					
 					$("html, body").delay(500).animate({
 						scrollTop: $('#show-results').offset().top
 					}, 1000);
