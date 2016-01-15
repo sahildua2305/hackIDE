@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-14 19:47:59
+* @Last Modified time: 2016-01-15 14:43:30
 */
 
 
@@ -81,7 +81,7 @@ $(document).ready(function(){
 			"PHP":"php",
 			"PYTHON":"py",
 			"R":"r",
-			"RUBY":"gem",
+			"RUBY":"rb",
 			"RUST":"rs",
 			"SCALA":"scala"
 		}[ext] || "txt";
@@ -93,7 +93,7 @@ $(document).ready(function(){
 	 */
 	function downloadFile(filename, text, lang) {
 
-		var ext = translateLangToExt(lang)
+		var ext = translateLangToExt(lang);
 
 		var element = document.createElement('a');
 		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
