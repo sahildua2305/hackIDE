@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-15 15:17:20
+* @Last Modified time: 2016-01-15 15:23:45
 */
 
 
@@ -10,8 +10,6 @@ $(document).ready(function(){
 
 	// contents of the editor at any step
 	var editorContent;
-	// flag to keep track of whether settings-pane is open or not
-	var settingsPaneVisible = false;
 	// language selected
 	var languageSelected = "CPP";
 	// editor-theme
@@ -461,18 +459,8 @@ $(document).ready(function(){
 	// when show-settings is clicked
 	$("#show-settings").click(function(){
 
-		if(settingsPaneVisible){
-			// hide settings-pane
-			$("#settings-pane").hide();
-			// update flag
-			settingsPaneVisible = false;
-		}
-		else{
-			// hide settings-pane
-			$("#settings-pane").show();
-			// update flag
-			settingsPaneVisible = true;
-		}
+		// toggle visibility of the pane
+		$("#settings-pane").toggle();
 
 	});
 
