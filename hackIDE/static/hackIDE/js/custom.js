@@ -1,8 +1,8 @@
-/* 
+/*
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-14 22:53:11
+* @Last Modified time: 2016-01-15 15:23:45
 */
 
 
@@ -10,8 +10,6 @@ $(document).ready(function(){
 
 	// contents of the editor at any step
 	var editorContent;
-	// flag to keep track of whether settings-pane is open or not
-	var settingsPaneVisible = false;
 	// language selected
 	var languageSelected = "CPP";
 	// editor-theme
@@ -59,21 +57,48 @@ $(document).ready(function(){
 
 	/**
 	 * function to update editorContent with current content of editor
-	 * 
+	 *
 	 */
 	function updateContent(){
 		editorContent = editor.getValue();
 	}
 
+	/**
+	* function to translate the language to a file extension, txt as fallback
+	*
+	*/
+	function translateLangToExt(ext) {
+		return {
+			"C":"c",
+			"CPP":"cpp",
+			"CSHARP":"cs",
+		  "CLOJURE":"clj",
+			"CSS":"css",
+			"HASKELL":"hs",
+			"JAVA":"java",
+			"JAVASCRIPT":"js",
+			"OBJECTIVEC":"m",
+			"PERL":"pl",
+			"PHP":"php",
+			"PYTHON":"py",
+			"R":"r",
+			"RUBY":"rb",
+			"RUST":"rs",
+			"SCALA":"scala"
+		}[ext] || "txt";
+	}
 
 	/**
 	 * function to download a file with given filename with text as it's contents
-	 * 
+	 *
 	 */
-	function downloadFile(filename, text) {
+	function downloadFile(filename, text, lang) {
+
+		var ext = translateLangToExt(lang);
+
 		var element = document.createElement('a');
 		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-		element.setAttribute('download', filename);
+		element.setAttribute('download', filename + '.' + ext);
 
 		element.style.display = 'none';
 		document.body.appendChild(element);
@@ -86,10 +111,10 @@ $(document).ready(function(){
 
 	/**
 	 * function to send AJAX request to 'compile/' endpoint
-	 * 
+	 *
 	 */
 	function compileCode(){
-		
+
 		// if a compile request is ongoing
 		if(request_ongoing)
 			return;
@@ -136,7 +161,7 @@ $(document).ready(function(){
 				$("#run-code").prop('disabled', false);
 
 				$("html, body").delay(500).animate({
-					scrollTop: $('#show-results').offset().top 
+					scrollTop: $('#show-results').offset().top
 				}, 1000);
 
 				$(".output-response-box").show();
@@ -179,7 +204,7 @@ $(document).ready(function(){
 				$("#run-code").prop('disabled', false);
 
 				$("html, body").delay(500).animate({
-					scrollTop: $('#show-results').offset().top 
+					scrollTop: $('#show-results').offset().top
 				}, 1000);
 
 				$(".output-response-box").show();
@@ -201,10 +226,10 @@ $(document).ready(function(){
 
 	/**
 	 * function to send AJAX request to 'run/' endpoint
-	 * 
+	 *
 	 */
 	function runCode(){
-		
+
 		// if a run request is ongoing
 		if(request_ongoing)
 			return;
@@ -254,7 +279,7 @@ $(document).ready(function(){
 					$("#run-code").prop('disabled', false);
 
 					$("html, body").delay(500).animate({
-						scrollTop: $('#show-results').offset().top 
+						scrollTop: $('#show-results').offset().top
 					}, 1000);
 
 					$(".output-response-box").show();
@@ -309,7 +334,7 @@ $(document).ready(function(){
 					$("#run-code").prop('disabled', false);
 
 					$("html, body").delay(500).animate({
-						scrollTop: $('#show-results').offset().top 
+						scrollTop: $('#show-results').offset().top
 					}, 1000);
 
 					$(".output-response-box").show();
@@ -353,7 +378,7 @@ $(document).ready(function(){
 					$("#run-code").prop('disabled', false);
 
 					$("html, body").delay(500).animate({
-						scrollTop: $('#show-results').offset().top 
+						scrollTop: $('#show-results').offset().top
 					}, 1000);
 
 					$(".output-response-box").show();
@@ -397,7 +422,7 @@ $(document).ready(function(){
 					}
 				},
 				error: function(error){
-					
+
 					request_ongoing = false;
 
 					// Change button text when this method is called
@@ -408,7 +433,7 @@ $(document).ready(function(){
 					$("#run-code").prop('disabled', false);
 					
 					$("html, body").delay(500).animate({
-						scrollTop: $('#show-results').offset().top 
+						scrollTop: $('#show-results').offset().top
 					}, 1000);
 
 					$(".output-response-box").show();
@@ -433,19 +458,9 @@ $(document).ready(function(){
 
 	// when show-settings is clicked
 	$("#show-settings").click(function(){
-		
-		if(settingsPaneVisible){
-			// hide settings-pane
-			$("#settings-pane").hide();
-			// update flag
-			settingsPaneVisible = false;
-		}
-		else{
-			// hide settings-pane
-			$("#settings-pane").show();
-			// update flag
-			settingsPaneVisible = true;
-		}
+
+		// toggle visibility of the pane
+		$("#settings-pane").toggle();
 
 	});
 
@@ -455,14 +470,14 @@ $(document).ready(function(){
 
 		// TODO: implement download code feature
 		updateContent();
-		downloadFile("code", editorContent);
+		downloadFile("code", editorContent, $("#lang").val());
 
 	});
 
 
 	// when lang is changed
 	$("#lang").change(function(){
-		
+
 		languageSelected = $("#lang").val();
 
 		// update the language (mode) for the editor
@@ -478,9 +493,9 @@ $(document).ready(function(){
 
 	// when editor-theme is changed
 	$("#editor-theme").change(function(){
-		
+
 		editorThemeSelected = $("#editor-theme").val();
-		
+
 		// update the theme for the editor
 		if(editorThemeSelected == "DARK"){
 			editor.setTheme("ace/theme/twilight");
