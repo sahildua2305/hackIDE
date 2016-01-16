@@ -3,19 +3,22 @@
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
 # @Last Modified by:   sahildua2305
-# @Last Modified time: 2016-01-14 18:28:36
+# @Last Modified time: 2016-01-16 15:59:45
 
 
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseForbidden
 
-import requests
-
-from heCredentials import CLIENT_SECRET
+import requests, os
 
 
 COMPILE_URL = "https://api.hackerearth.com/v3/code/compile/"
 RUN_URL = "https://api.hackerearth.com/v3/code/run/"
+
+
+# access config variable
+CLIENT_SECRET = os.environ['HE_CLIENT_SECRET']
+
 
 permitted_languages = ["C", "CPP", "CSHARP", "CLOJURE", "CSS", "HASKELL", "JAVA", "JAVASCRIPT", "OBJECTIVEC", "PERL", "PHP", "PYTHON", "R", "RUBY", "RUST", "SCALA"]
 
