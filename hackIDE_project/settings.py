@@ -25,7 +25,7 @@ SECRET_KEY = '+h*i@$52+w(_e#etvzgnkjq!q0ajz1qpgs-y9%89x4w3nlct=m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['hackide.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 # To allow the cross site request over the app
 CORS_ORIGIN_ALLOW_ALL = True
@@ -34,7 +34,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
