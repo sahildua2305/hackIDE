@@ -58,5 +58,5 @@ docs/_build/
 # PyBuilder
 target/
 
-# heCredentials (CLIENT_SECRET)
-heCredentials.py
+# staticfiles
+staticfiles/

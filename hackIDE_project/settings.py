@@ -23,9 +23,9 @@ print BASE_DIR
 SECRET_KEY = '+h*i@$52+w(_e#etvzgnkjq!q0ajz1qpgs-y9%89x4w3nlct=m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['hackide.herokuapp.com']
 
 # To allow the cross site request over the app
 CORS_ORIGIN_ALLOW_ALL = True
@@ -129,7 +129,7 @@ STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, '../hackIDE/static'),
 )
 
 # Simplified static file serving.
