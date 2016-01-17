@@ -24,7 +24,8 @@ $(document).ready(function(){
 	// flag to block requests when a request is running
 	var request_ongoing = false;
 
-
+	// set base path of ace editor. Requied by WhiteNoise
+	ace.config.set("basePath", "/static/hackIDE/ace-builds/src/");
 	// trigger extension
 	ace.require("ace/ext/language_tools");
 	// init the editor
@@ -431,7 +432,7 @@ $(document).ready(function(){
 					// enable button when this method is called
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
-					
+
 					$("html, body").delay(500).animate({
 						scrollTop: $('#show-results').offset().top
 					}, 1000);
