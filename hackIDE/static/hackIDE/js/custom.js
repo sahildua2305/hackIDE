@@ -359,13 +359,14 @@ $(document).ready(function(){
 				lang: languageSelected,
 				csrfmiddlewaretoken: csrf_token
 			};
-			// AJAX request to Django for running code without input
+			// AJAX request to Django for running code without input\
+			var timeout_ms = 10000;
 			$.ajax({
 				url: RUN_URL,
 				type: "POST",
 				data: run_data,
 				dataType: "json",
-				timeout: 10000,
+				timeout: timeout_ms,
 				success: function(response){
 
 					request_ongoing = false;
@@ -406,8 +407,16 @@ $(document).ready(function(){
 							$(".run-status").children(".value").html(response.run_status.status);
 							$(".time-sec").children(".value").html(response.run_status.time_used);
 							$(".memory-kb").children(".value").html(response.run_status.memory_used);
-							$(".error-key").html("Run-time error (stderr)");
-							$(".error-message").html(response.run_status.stderr);
+
+							if (response.run_status.status == "TLE"){
+								// Timeout error
+								$(".error-key").html("Timeout error");
+								$(".error-message").html("Execution time has exceed.");
+							} else {
+								// General stack error
+								$(".error-key").html("Run-time error (stderr)");
+								$(".error-message").html(response.run_status.stderr);
+							}
 						}
 					}
 					else{
@@ -431,7 +440,7 @@ $(document).ready(function(){
 					// enable button when this method is called
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
-					
+
 					$("html, body").delay(500).animate({
 						scrollTop: $('#show-results').offset().top
 					}, 1000);
