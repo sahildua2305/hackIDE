@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-15 15:23:45
+* @Last Modified time: 2016-01-18 16:33:19
 */
 
 
@@ -24,7 +24,7 @@ $(document).ready(function(){
 	// flag to block requests when a request is running
 	var request_ongoing = false;
 
-	// set base path of ace editor. Requied by WhiteNoise
+	// set base path of ace editor. Required by WhiteNoise
 	ace.config.set("basePath", "/static/hackIDE/ace-builds/src/");
 	// trigger extension
 	ace.require("ace/ext/language_tools");

@@ -3,7 +3,7 @@
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
 # @Last Modified by:   sahildua2305
-# @Last Modified time: 2016-01-16 15:59:45
+# @Last Modified time: 2016-01-18 16:45:14
 
 
 from django.shortcuts import render
@@ -17,7 +17,9 @@ RUN_URL = "https://api.hackerearth.com/v3/code/run/"
 
 
 # access config variable
-CLIENT_SECRET = os.environ['HE_CLIENT_SECRET']
+DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
+# DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
+CLIENT_SECRET = os.environ['HE_CLIENT_SECRET'] if not DEBUG else ""
 
 
 permitted_languages = ["C", "CPP", "CSHARP", "CLOJURE", "CSS", "HASKELL", "JAVA", "JAVASCRIPT", "OBJECTIVEC", "PERL", "PHP", "PYTHON", "R", "RUBY", "RUST", "SCALA"]

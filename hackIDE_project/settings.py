@@ -23,7 +23,8 @@ print BASE_DIR
 SECRET_KEY = '+h*i@$52+w(_e#etvzgnkjq!q0ajz1qpgs-y9%89x4w3nlct=m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
+DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
+# DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
 
 ALLOWED_HOSTS = ['hackide.herokuapp.com'] if not DEBUG else ['*']
 
