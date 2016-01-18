@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-18 16:33:19
+* @Last Modified time: 2016-01-18 16:55:07
 */
 
 
@@ -412,7 +412,7 @@ $(document).ready(function(){
 							if (response.run_status.status == "TLE"){
 								// Timeout error
 								$(".error-key").html("Timeout error");
-								$(".error-message").html("Execution time has exceed.");
+								$(".error-message").html("Time limit exceeded.");
 							} else {
 								// General stack error
 								$(".error-key").html("Run-time error (stderr)");
