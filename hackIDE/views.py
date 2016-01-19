@@ -3,7 +3,7 @@
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
 # @Last Modified by:   sahildua2305
-# @Last Modified time: 2016-01-18 16:45:14
+# @Last Modified time: 2016-01-19 18:39:26
 
 
 from django.shortcuts import render
@@ -144,3 +144,8 @@ def runCode(request):
 			return JsonResponse(r.json(), safe=False)
 	else:
 		return HttpResponseForbidden()
+
+
+def savedCodeView(request, code_id):
+	# render the index.html
+	return render(request, 'hackIDE/index.html', {})
