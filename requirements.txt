@@ -24,3 +24,5 @@ website-status==0.0.5
 wheel==0.24.0
 whitenoise==2.0.6
 wsgiref==0.1.2
+django-heroku-mongoify
+pymongo
