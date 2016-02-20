@@ -413,7 +413,12 @@ $(document).ready(function(){
 								// Timeout error
 								$(".error-key").html("Timeout error");
 								$(".error-message").html("Time limit exceeded.");
-							} else {
+							} else if(response.run_status.status == "MLE"){
+								// Memory Limit Exceeded
+								$(".error-key").html("Memory limit error");
+								$(".error-message").html("Memory limit exceeded");
+							}
+							else {
 								// General stack error
 								$(".error-key").html("Run-time error (stderr)");
 								$(".error-message").html(response.run_status.stderr);
