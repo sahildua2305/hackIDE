@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-02-21 22:49:35
+* @Last Modified time: 2016-02-21 22:55:01
 */
 
 
@@ -62,6 +62,8 @@ $(document).ready(function(){
 		enableSnippets: true,
 		enableLiveAutocompletion: true
 	});
+	// include boilerplate code for selected default language
+	editor.setValue(langBoilerplate[languageSelected]);
 
 	// create a simple selection status indicator
 	var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
@@ -523,8 +525,9 @@ $(document).ready(function(){
 		}
 		
 		//Change the contents to the boilerplate code if it is empty
-		if(editor.getValue() == '' || editor.getValue() == ' ' )
+		if(editor.getValue() == '' || editor.getValue() == ' ' ){
 			editor.setValue(langBoilerplate[languageSelected]);
+		}
 
 	});
 
