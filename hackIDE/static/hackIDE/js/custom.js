@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-18 16:55:07
+* @Last Modified time: 2016-02-21 22:49:35
 */
 
 
@@ -37,7 +37,7 @@ $(document).ready(function(){
 	langBoilerplate['PYTHON'] = "# your code goes here";
 	langBoilerplate['R'] = "# your code goes here";
 	langBoilerplate['RUBY'] = "# your code goes here";
-	langBoilerplate['RUST'] = "fn main() {\n    // The statements here will be executed when the compiled binary is called\n\n    // Print text to the console\n    println!("Hello World!");\n}\n";
+	langBoilerplate['RUST'] = "fn main() {\n    // The statements here will be executed when the compiled binary is called\n\n    // Print text to the console\n    println!(\"Hello World!\");\n}\n";
 	langBoilerplate['SCALA'] = "object Main extends App {\n	// your code goes here\n}\n";
 
 	// flag to block requests when a request is running
