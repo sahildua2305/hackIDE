@@ -524,10 +524,8 @@ $(document).ready(function(){
 			editor.getSession().setMode("ace/mode/" + languageSelected.toLowerCase());
 		}
 		
-		//Change the contents to the boilerplate code if it is empty
-		if(editor.getValue() == '' || editor.getValue() == ' ' ){
-			editor.setValue(langBoilerplate[languageSelected]);
-		}
+		//Change the contents to the boilerplate code
+		editor.setValue(langBoilerplate[languageSelected]);
 
 	});
 
