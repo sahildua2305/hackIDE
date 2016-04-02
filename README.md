@@ -6,4 +6,4 @@ hackIDE is an online code editor, compiler and interpreter based on Django, powe
 
 
 ## Screenshot- 
-![Demo example for HackIDE](/hackIDE/static/hackIDE/img/screenshot.png?raw=true "Demo example for HackIDE")
+![Screenshot for HackIDE](/hackIDE/static/hackIDE/img/screenshot.png?raw=true "Screenshot for HackIDE")
