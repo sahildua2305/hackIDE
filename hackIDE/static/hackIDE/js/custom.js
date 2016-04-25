@@ -29,12 +29,12 @@ $(document).ready(function(){
 	langBoilerplate['CSS'] = "/* begin writing below */";
 	langBoilerplate['CLOJURE'] = "; your code goes here";
 	langBoilerplate['HASKELL'] = "main = -- your code goes here";
-	langBoilerplate['JAVA'] = "//begin writing below"; // TODO Improve this by supplying code that runs
+	langBoilerplate['JAVA'] = "public class TestDriver {\n    public static void main(String[] args) {\n        // Your code goes here\n    }\n}";
 	langBoilerplate['JAVASCRIPT'] = "importPackage(java.io);\nimportPackage(java.lang);\n\n// your code goes here\n";
 	langBoilerplate['OBJECTIVEC'] = "#import <objc/objc.h>\n#import <objc/Object.h>\n#import <Foundation/Foundation.h>\n\n@implementation TestObj\nint main()\n{\n	// your code goes here\n	return 0;\n}\n@end";
 	langBoilerplate['PERL'] = "#!/usr/bin/perl\n# your code goes here\n";
 	langBoilerplate['PHP'] = "<?php\n\n// your code goes here\n";
-	langBoilerplate['PYTHON'] = "# your code goes here";
+	langBoilerplate['PYTHON'] = "def main():\n    # Your code goes here\n\nif __name__ == \"__main__\":\n    main()";
 	langBoilerplate['R'] = "# your code goes here";
 	langBoilerplate['RUBY'] = "# your code goes here";
 	langBoilerplate['RUST'] = "fn main() {\n    // The statements here will be executed when the compiled binary is called\n\n    // Print text to the console\n    println!(\"Hello World!\");\n}\n";
@@ -523,7 +523,7 @@ $(document).ready(function(){
 		else{
 			editor.getSession().setMode("ace/mode/" + languageSelected.toLowerCase());
 		}
-		
+
 		//Change the contents to the boilerplate code
 		editor.setValue(langBoilerplate[languageSelected]);
 
