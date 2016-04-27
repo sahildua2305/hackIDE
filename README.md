@@ -19,5 +19,5 @@ Note that the IDE may not show up without a valid api token from HackerEarth. To
 
 ```
 $ python manage.py collectstatic
-$ HE_CLIENT_SECRET=<<your toekn here>> python manage.py runserver
+$ HE_CLIENT_SECRET=<<your token here>> python manage.py runserver
 ```
