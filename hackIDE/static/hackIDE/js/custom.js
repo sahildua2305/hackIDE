@@ -1,8 +1,8 @@
 /*
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
-* @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-02-21 22:55:01
+* @Last Modified by:   Sahil Dua
+* @Last Modified time: 2016-05-17 19:39:19
 */
 
 
@@ -68,13 +68,6 @@ $(document).ready(function(){
 	// create a simple selection status indicator
 	var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
 	var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"));
-
-
-	// disable compile code button initially
-	$('#compile-code').prop('disabled', true);
-	$('#compile-code').prop('title', "Editor has no code");
-	$("#run-code").prop('disabled', true);
-	$('#run-code').prop('title', "Editor has no code");
 
 
 	/**
