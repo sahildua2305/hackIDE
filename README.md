@@ -15,7 +15,7 @@ $ python manage.py collectstatic
 $ HACKIDE_DEBUG=true python manage.py runserver
 ```
 
-Note that the IDE may not show up without a valid api token from HackerEarth. To specify the HackerEarth api token, supply it with ```HE_CLIENT_SECRET``` as a command line variable.
+Note that the IDE may not show up without a valid api token from HackerEarth. To specify the HackerEarth api token, supply it with ```HE_CLIENT_SECRET``` as a command line argument.
 
 ```
 $ python manage.py collectstatic
