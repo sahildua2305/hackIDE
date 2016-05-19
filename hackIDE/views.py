@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
-# @Last Modified by:   sahildua2305
-# @Last Modified time: 2016-01-19 18:39:26
+# @Last Modified by:   Sahil Dua
+# @Last Modified time: 2016-05-19 23:43:09
 
 
 from django.shortcuts import render
@@ -146,6 +146,6 @@ def runCode(request):
 		return HttpResponseForbidden()
 
 
-def savedCodeView(request, code_id):
-	# render the index.html
-	return render(request, 'hackIDE/index.html', {})
+# def savedCodeView(request, code_id):
+# 	# render the index.html
+# 	return render(request, 'hackIDE/index.html', {})
