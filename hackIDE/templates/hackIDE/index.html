@@ -51,8 +51,7 @@
     				<div id="editor-topbar">
 
     					<div class="lang-choose">
-
-							<select id="lang" onChane="go()">
+							<select id="lang">
 								<option value="C">C (gcc 4.8.1)</option>
 								<option value="CPP" selected>C++ (g++ 4.8.1)</option>
 								<option value="CSHARP">C#</option>
@@ -78,75 +77,11 @@
 							<a class="cursor no-select" id="download-code">
 								<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 							</a>
-
-							<button type="button" class="btn btn-default btn-sm">
-								Download zip
-								<script type="text/javascript">
-									var code_language;
-									function go(){
-										var temp = document.getElementById("lang").value;
-										if(temp == "C") {
-											code_language = ".c";
-										}
-										else if(temp == "CPP") {
-											code_language = ".cpp";
-										}
-										else if(temp == "CLOJURE") {
-											code_language = ".clj";
-										}
-										else if(temp == "CSS") {
-											code_language = ".css";
-										}
-										else if(temp == "CSHARP") {
-											code_language = ".c#";
-										}
-										else if(temp == "HASKELL") {
-											code_language = ".hs";
-										}
-										else if(temp == "JAVASCRIPT") {
-											code_language = ".js";
-										}
-										else if(temp == "JAVA") {
-											code_language = ".java";
-										}
-										else if(temp == "OBJECTIVEC") {
-											code_language = ".m";
-										}
-										else if(temp == "PHP") {
-											code_language = ".phps";
-										}
-										else if(temp == "PYTHON") {
-											code_language = ".py";
-										}
-										else if(temp == "PERL") {
-											code_language = ".pl";
-										}
-										else if(temp == "R") {
-											code_language = ".r";
-										}
-										else if(temp == "RUBY") {
-											code_language = ".rb";
-										}
-										else if(temp == "RUST") {
-											code_language = ".rs";
-										}
-										else if(temp == "SCALA") {
-											code_language = ".sca";
-										}
-									};
-									var code_written = document.getElementsById("editor").value;
-									document.querySelector("button").addEventListener("click", function() {
-    										var zip = new JSZip()
-    										zip.file("test"+code_language,code_written)
-										var xhr = new XMLHttpRequest();
-    										xhr.onload = function() {
-      										var downloadFile = zip.generate({type:"blob"});
-      										saveAs(downloadFile, 'test.zip')
-    										}
-    										xhr.open('get', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js')
-    									xhr.send() })
-								</script>
-							</button>
+							
+                            <a class="cursor no-select" id="download-zip">
+                                zip
+                                <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                            </a>
 							
 							<a class="cursor no-select" id="show-settings">
 								<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -270,7 +205,7 @@
     	<script src="{% static 'hackIDE/js/jquery.min.js' %}" type="text/javascript" charset="utf-8"></script>
 
     	<!-- Bootstrap (include all individual files below) -->
-    	<script src="{% static 'hackIDE/js/custom.js' %}" type="text/javascript" charset="utf-8"></script>
+    	<script src="{% static 'hackIDE/js/custom2.js' %}" type="text/javascript" charset="utf-8"></script>
     	<script src="{% static 'hackIDE/js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
     	<script src="{% static 'hackIDE/ace-builds/src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
     	<script src="{% static 'hackIDE/ace-builds/src/ext-statusbar.js' %}" type="text/javascript" charset="utf-8"></script>

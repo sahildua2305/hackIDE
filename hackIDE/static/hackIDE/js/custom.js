@@ -123,6 +123,21 @@ $(document).ready(function(){
 		document.body.removeChild(element);
 	}
 
+	function downloadFile2(filename, text, lang) {
+
+		var ext = translateLangToExt(lang);
+		
+		var zip = new JSZip()
+		zip.file("test."+ext, text)
+		var xhr = new XMLHttpRequest();
+		xhr.onload = function() {
+			var downloaded = zip.generate({type : "blob"})
+			saveAs(downloaded, "test.zip")
+		}
+		xhr.open('get', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js')
+		xhr.send()
+
+	}
 
 	/**
 	 * function to send AJAX request to 'compile/' endpoint
@@ -502,7 +517,14 @@ $(document).ready(function(){
 		downloadFile("code", editorContent, $("#lang").val());
 
 	});
+	
+	//when download-zip is clicked
+	$("#download-zip").click(function(){
+	
+		updateContent();
+		downloadFile2("code", editorContent, $("#lang").val());
 
+	});
 
 	// when lang is changed
 	$("#lang").change(function(){
