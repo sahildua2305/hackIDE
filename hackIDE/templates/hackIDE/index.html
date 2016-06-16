@@ -22,8 +22,6 @@
 		<!-- Stylesheets -->
 		<link rel="stylesheet" type="text/css" href="{% static 'hackIDE/css/bootstrap.min.css' %}" />
 		<link rel="stylesheet" type="text/css" href="{% static 'hackIDE/css/custom.css' %}" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2014-11-29/FileSaver.min.js"></script>
-  		<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
 
     </head>
     <body>
@@ -51,7 +49,8 @@
     				<div id="editor-topbar">
 
     					<div class="lang-choose">
-							<select id="lang">
+
+							<select class="form-control" name="lang" id="lang">
 								<option value="C">C (gcc 4.8.1)</option>
 								<option value="CPP" selected>C++ (g++ 4.8.1)</option>
 								<option value="CSHARP">C#</option>
@@ -77,11 +76,6 @@
 							<a class="cursor no-select" id="download-code">
 								<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
 							</a>
-							
-                            <a class="cursor no-select" id="download-zip">
-                                zip
-                                <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-                            </a>
 							
 							<a class="cursor no-select" id="show-settings">
 								<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -206,6 +200,8 @@
 
     	<!-- Bootstrap (include all individual files below) -->
     	<script src="{% static 'hackIDE/js/custom.js' %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static 'hackIDE/js/FileSaver.min.js' %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static 'hackIDE/js/jszip.min.js' %}" type="text/javascript" charset="utf-8"></script>
     	<script src="{% static 'hackIDE/js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
     	<script src="{% static 'hackIDE/ace-builds/src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
     	<script src="{% static 'hackIDE/ace-builds/src/ext-statusbar.js' %}" type="text/javascript" charset="utf-8"></script>

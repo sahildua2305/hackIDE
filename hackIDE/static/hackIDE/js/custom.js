@@ -108,27 +108,11 @@ $(document).ready(function(){
 	 *
 	 */
 	function downloadFile(filename, text, lang) {
-
-		var ext = translateLangToExt(lang);
-
-		var element = document.createElement('a');
-		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-		element.setAttribute('download', filename + '.' + ext);
-
-		element.style.display = 'none';
-		document.body.appendChild(element);
-
-		element.click();
-
-		document.body.removeChild(element);
-	}
-
-	function downloadFile2(filename, text, lang) {
-
+		
 		var ext = translateLangToExt(lang);
 		
 		var zip = new JSZip()
-		zip.file("test."+ext, text)
+		zip.file(filename+"."+ext, text)
 		var xhr = new XMLHttpRequest();
 		xhr.onload = function() {
 			var downloaded = zip.generate({type : "blob"})
@@ -518,14 +502,6 @@ $(document).ready(function(){
 
 	});
 	
-	//when download-zip is clicked
-	$("#download-zip").click(function(){
-	
-		updateContent();
-		downloadFile2("code", editorContent, $("#lang").val());
-
-	});
-
 	// when lang is changed
 	$("#lang").change(function(){
 
