@@ -24,5 +24,5 @@ $ HE_CLIENT_SECRET=<<your token here>> python manage.py runserver
 
 ## TODO
  - [x] Add "Download code as a zipped file" option
- - [ ]Implement "Save code on cloud" feature
- - [ ]Implement profiling system allowing users to make their profiles and saving codes in their profiles
+ - [ ] Implement "Save code on cloud" feature
+ - [ ] Implement profiling system allowing users to make their profiles and saving codes in their profiles
