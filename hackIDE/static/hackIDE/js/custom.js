@@ -108,21 +108,20 @@ $(document).ready(function(){
 	 *
 	 */
 	function downloadFile(filename, text, lang) {
-
+		
 		var ext = translateLangToExt(lang);
+		
+		var zip = new JSZip()
+		zip.file(filename+"."+ext, text)
+		var xhr = new XMLHttpRequest();
+		xhr.onload = function() {
+			var downloaded = zip.generate({type : "blob"})
+			saveAs(downloaded, "test.zip")
+		}
+		xhr.open('get', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js')
+		xhr.send()
 
-		var element = document.createElement('a');
-		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-		element.setAttribute('download', filename + '.' + ext);
-
-		element.style.display = 'none';
-		document.body.appendChild(element);
-
-		element.click();
-
-		document.body.removeChild(element);
 	}
-
 
 	/**
 	 * function to send AJAX request to 'compile/' endpoint
@@ -502,8 +501,7 @@ $(document).ready(function(){
 		downloadFile("code", editorContent, $("#lang").val());
 
 	});
-
-
+	
 	// when lang is changed
 	$("#lang").change(function(){
 
