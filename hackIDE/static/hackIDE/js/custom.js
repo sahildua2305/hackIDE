@@ -113,13 +113,8 @@ $(document).ready(function(){
 		
 		var zip = new JSZip()
 		zip.file(filename+"."+ext, text)
-		var xhr = new XMLHttpRequest();
-		xhr.onload = function() {
-			var downloaded = zip.generate({type : "blob"})
-			saveAs(downloaded, "test.zip")
-		}
-		xhr.open('get', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js')
-		xhr.send()
+		var downloaded = zip.generate({type : "blob"})
+		saveAs(downloaded, "test.zip")
 
 	}
 
@@ -536,6 +531,17 @@ $(document).ready(function(){
 
 	});
 
+	//close dropdown after focus is lost
+	var mouse_inside = false;
+	$('#settings-pane').hover(function(){
+		mouse_inside = true;
+	}, function(){
+		mouse_inside = false;
+	});
+	$('body').mouseup(function(){
+		if(!mouse_inside)
+			$('#settings-pane').hide();
+	});
 
 	// when indent-spaces is changed
 	$("#indent-spaces").change(function(){
