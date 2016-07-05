@@ -378,7 +378,7 @@ $(document).ready(function(){
 				success: function(response){
 					request_ongoing = false;
 					
-					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'?code_id='+response.code_id+'</kbd>';
+					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'/code_id='+response.code_id+'/</kbd>';
 					$('#copy_code').css({'display':'initial'});
 
 					
@@ -479,8 +479,7 @@ $(document).ready(function(){
 				dataType: "json",
 				timeout: timeout_ms,
 				success: function(response){
-					console.log('here');
-					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'?code_id='+response.code_id+'</kbd>';
+					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'/code_id='+response.code_id+'/</kbd>';
 					$('#copy_code').css({'display':'initial'});
 
 					request_ongoing = false;

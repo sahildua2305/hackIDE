@@ -17,8 +17,6 @@ urlpatterns = [
 	url(r'^compile/$', views.compileCode, name='compile'),
 	# ex: /run/
 	url(r'^run/$', views.runCode, name='run'),
-        # ex: /code=*/run/
-	url(r'(?P<code_id>\w{0,50})/run/$', views.runCode, name='code-re-run'),
         # ex: /code=ajSkHb
 	url(r'(?P<code_id>\w{0,50})/$', views.savedCodeView, name='saved-code'),
        
