@@ -20,8 +20,7 @@ RUN_URL = "https://api.hackerearth.com/v3/code/run/"
 # access config variable
 DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
 # DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
-#CLIENT_SECRET = os.environ['HE_CLIENT_SECRET'] if not DEBUG else ""
-CLIENT_SECRET = "bea98ae9dcbc79df09271f0ffc5bfe7e13c2a2c6"
+CLIENT_SECRET = os.environ['HE_CLIENT_SECRET'] if not DEBUG else ""
 
 permitted_languages = ["C", "CPP", "CSHARP", "CLOJURE", "CSS", "HASKELL", "JAVA", "JAVASCRIPT", "OBJECTIVEC", "PERL", "PHP", "PYTHON", "R", "RUBY", "RUST", "SCALA"]
 
