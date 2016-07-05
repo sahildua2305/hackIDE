@@ -1,4 +1,4 @@
-{% load staticfiles %}
+﻿{% load staticfiles %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,9 +25,19 @@
 
     </head>
     <body>
-
         <!-- Hidden input field containing CSRF token required for making AJAX calls to Django -->
         <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+        <input type="hidden" id='saved_code_content' value="{{ code_content }}" />
+        <input type="hidden" id='saved_code_lang' value="{{ lang }}" />
+        <input type="hidden" id='saved_code_input' value="{{ inp }}" />
+        <input type='hidden' id='compile_status' value={{compile_status}} /> 
+        <input type='hidden' id='run_status_status' value={{run_status_status}} />
+        <input type='hidden' id='run_status_time' value={{run_status_time}} />
+        <input type='hidden' id='run_status_memory' value={{run_status_memory}} />
+        <input type='hidden' id='run_status_output' value={{run_status_output}} />
+        <input type='hidden' id='run_status_stderr' value={{run_status_stderr}} />
+        <textarea id='copy_link' readonly></textarea>
+
 
 		<nav class="navbar navbar-default">
 			<div class="container">
@@ -118,12 +128,12 @@
 						</div>
     				</div>
     				<div class="pull-right run-save-panel">
+              <span id='copy_code'></span>
 	    				<button class="btn btn-info" id="compile-code" data-toggle="tooltip" data-placement="top" title="Press Shift+Enter">Compile it!</button>
 	    				<button class="btn btn-success" id="run-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+Enter">Hack(run) it!</button>
 	    			</div>
     			</div>
     		</div> <!-- END of row -->
-
     		<div class="row">
     			<div class="col-md-12 right">
 	    			<!-- custom input textarea -->
