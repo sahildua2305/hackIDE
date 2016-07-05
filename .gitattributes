@@ -1,0 +1,5 @@
+hackIDE/static/hackIDE/ace-builds/* linguist-vendored
+FileSaver.min.js linguist-vendored
+jszip.min.js linguist-vendored
+jquery.min.js linguist-vendored
+bootstrap.min.js linguist-vendored

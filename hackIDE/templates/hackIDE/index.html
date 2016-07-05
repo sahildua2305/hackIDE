@@ -44,7 +44,7 @@
 
     		<div class="row">
 
-    			<div class="left col-md-8">
+    			<div class="left col-md-12">
 
     				<div id="editor-topbar">
 
@@ -109,7 +109,7 @@
     		</div> <!-- END of row -->
 
     		<div class="row">
-    			<div class="col-md-8 right" id="show-results">
+    			<div class="col-md-12 right" id="show-results">
     				<div class="pull-left custom-input-panel">
 						<div class="checkbox">
 							<label>
@@ -125,7 +125,7 @@
     		</div> <!-- END of row -->
 
     		<div class="row">
-    			<div class="col-md-8 right">
+    			<div class="col-md-12 right">
 	    			<!-- custom input textarea -->
 					<div class="custom-input-container">
 						<textarea id="custom-input" class="nice-textarea" placeholder="Custom input"></textarea>
@@ -134,7 +134,7 @@
     		</div> <!-- END of row -->
 
     		<div class="row">
-    			<div class="col-md-8 right">
+    			<div class="col-md-12 right">
     				<div class="output-response-box">
     					<div class="output-details">
     						<div class="output-details-info run-status">
@@ -200,6 +200,8 @@
 
     	<!-- Bootstrap (include all individual files below) -->
     	<script src="{% static 'hackIDE/js/custom.js' %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static 'hackIDE/js/FileSaver.min.js' %}" type="text/javascript" charset="utf-8"></script>
+        <script src="{% static 'hackIDE/js/jszip.min.js' %}" type="text/javascript" charset="utf-8"></script>
     	<script src="{% static 'hackIDE/js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
     	<script src="{% static 'hackIDE/ace-builds/src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
     	<script src="{% static 'hackIDE/ace-builds/src/ext-statusbar.js' %}" type="text/javascript" charset="utf-8"></script>

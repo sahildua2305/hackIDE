@@ -1,8 +1,8 @@
 /*
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
-* @Last Modified by:   sahildua2305
-* @Last Modified time: 2016-01-18 16:55:07
+* @Last Modified by:   Sahil Dua
+* @Last Modified time: 2016-05-17 19:39:19
 */
 
 
@@ -20,6 +20,25 @@ $(document).ready(function(){
 	// HackerEarth API endpoints
 	var COMPILE_URL = "compile/"
 	var RUN_URL = "run/"
+
+	//Language Boilerplate Codes
+	var langBoilerplate = {}
+	langBoilerplate['C'] = "#include <stdio.h>\nint main(void) {\n	// your code goes here\n	return 0;\n}\n";
+	langBoilerplate['CPP'] = "#include <iostream>\nusing namespace std;\n\nint main() {\n	// your code goes here\n	return 0;\n}\n";
+	langBoilerplate['CSHARP'] = "using System;\n\npublic class Test\n{\n	public static void Main()\n	{\n		// your code goes here\n	}\n}\n";
+	langBoilerplate['CSS'] = "/* begin writing below */";
+	langBoilerplate['CLOJURE'] = "; your code goes here";
+	langBoilerplate['HASKELL'] = "main = -- your code goes here";
+	langBoilerplate['JAVA'] = "public class TestDriver {\n    public static void main(String[] args) {\n        // Your code goes here\n    }\n}";
+	langBoilerplate['JAVASCRIPT'] = "importPackage(java.io);\nimportPackage(java.lang);\n\n// your code goes here\n";
+	langBoilerplate['OBJECTIVEC'] = "#import <objc/objc.h>\n#import <objc/Object.h>\n#import <Foundation/Foundation.h>\n\n@implementation TestObj\nint main()\n{\n	// your code goes here\n	return 0;\n}\n@end";
+	langBoilerplate['PERL'] = "#!/usr/bin/perl\n# your code goes here\n";
+	langBoilerplate['PHP'] = "<?php\n\n// your code goes here\n";
+	langBoilerplate['PYTHON'] = "def main():\n    # Your code goes here\n\nif __name__ == \"__main__\":\n    main()";
+	langBoilerplate['R'] = "# your code goes here";
+	langBoilerplate['RUBY'] = "# your code goes here";
+	langBoilerplate['RUST'] = "fn main() {\n    // The statements here will be executed when the compiled binary is called\n\n    // Print text to the console\n    println!(\"Hello World!\");\n}\n";
+	langBoilerplate['SCALA'] = "object Main extends App {\n	// your code goes here\n}\n";
 
 	// flag to block requests when a request is running
 	var request_ongoing = false;
@@ -43,17 +62,12 @@ $(document).ready(function(){
 		enableSnippets: true,
 		enableLiveAutocompletion: true
 	});
+	// include boilerplate code for selected default language
+	editor.setValue(langBoilerplate[languageSelected]);
 
 	// create a simple selection status indicator
 	var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
 	var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"));
-
-
-	// disable compile code button initially
-	$('#compile-code').prop('disabled', true);
-	$('#compile-code').prop('title', "Editor has no code");
-	$("#run-code").prop('disabled', true);
-	$('#run-code').prop('title', "Editor has no code");
 
 
 	/**
@@ -94,21 +108,15 @@ $(document).ready(function(){
 	 *
 	 */
 	function downloadFile(filename, text, lang) {
-
+		
 		var ext = translateLangToExt(lang);
+		
+		var zip = new JSZip()
+		zip.file(filename+"."+ext, text)
+		var downloaded = zip.generate({type : "blob"})
+		saveAs(downloaded, "test.zip")
 
-		var element = document.createElement('a');
-		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-		element.setAttribute('download', filename + '.' + ext);
-
-		element.style.display = 'none';
-		document.body.appendChild(element);
-
-		element.click();
-
-		document.body.removeChild(element);
 	}
-
 
 	/**
 	 * function to send AJAX request to 'compile/' endpoint
@@ -413,7 +421,12 @@ $(document).ready(function(){
 								// Timeout error
 								$(".error-key").html("Timeout error");
 								$(".error-message").html("Time limit exceeded.");
-							} else {
+							} else if(response.run_status.status == "MLE"){
+								// Memory Limit Exceeded
+								$(".error-key").html("Memory limit error");
+								$(".error-message").html("Memory limit exceeded");
+							}
+							else {
 								// General stack error
 								$(".error-key").html("Run-time error (stderr)");
 								$(".error-message").html(response.run_status.stderr);
@@ -483,8 +496,7 @@ $(document).ready(function(){
 		downloadFile("code", editorContent, $("#lang").val());
 
 	});
-
-
+	
 	// when lang is changed
 	$("#lang").change(function(){
 
@@ -497,6 +509,9 @@ $(document).ready(function(){
 		else{
 			editor.getSession().setMode("ace/mode/" + languageSelected.toLowerCase());
 		}
+
+		//Change the contents to the boilerplate code
+		editor.setValue(langBoilerplate[languageSelected]);
 
 	});
 
@@ -516,6 +531,17 @@ $(document).ready(function(){
 
 	});
 
+	//close dropdown after focus is lost
+	var mouse_inside = false;
+	$('#settings-pane').hover(function(){
+		mouse_inside = true;
+	}, function(){
+		mouse_inside = false;
+	});
+	$('body').mouseup(function(){
+		if(!mouse_inside)
+			$('#settings-pane').hide();
+	});
 
 	// when indent-spaces is changed
 	$("#indent-spaces").change(function(){
