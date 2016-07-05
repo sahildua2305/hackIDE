@@ -229,6 +229,12 @@ $(document).ready(function(){
 		updateContent();
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+		
+		// if code_id present in url and /compile/ or /run/ is called change url
+		if(window.location.href.includes('code_id'))
+		{	
+				COMPILE_URL='/../compile/';
+		}
 
 		var compile_data = {
 			source: editorContent,
@@ -237,7 +243,7 @@ $(document).ready(function(){
 		};
 
 		request_ongoing = true;
-
+	
 		// AJAX request to Django for compiling code
 		$.ajax({
 			url: COMPILE_URL,
@@ -344,6 +350,12 @@ $(document).ready(function(){
 		updateContent();
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+		
+		// if code_id present in url and /compile/ or /run/ is called change url
+		if(window.location.href.includes('code_id'))
+		{
+				RUN_URL='/../run/';
+		}
 
 		var input_given = $("#custom-input").val();
 
@@ -366,7 +378,7 @@ $(document).ready(function(){
 				success: function(response){
 					request_ongoing = false;
 					
-					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'/code_id='+response.code_id+'</kbd>';
+					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'?code_id='+response.code_id+'</kbd>';
 					$('#copy_code').css({'display':'initial'});
 
 					
@@ -468,7 +480,7 @@ $(document).ready(function(){
 				timeout: timeout_ms,
 				success: function(response){
 					console.log('here');
-					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'/code_id='+response.code_id+'</kbd>';
+					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'?code_id='+response.code_id+'</kbd>';
 					$('#copy_code').css({'display':'initial'});
 
 					request_ongoing = false;
