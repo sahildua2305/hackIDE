@@ -480,7 +480,6 @@ $(document).ready(function(){
 
 
 	// when show-settings is clicked
-	var clicked = false;
 	$("#show-settings").click(function(event){
 
 		event.stopPropagation();
