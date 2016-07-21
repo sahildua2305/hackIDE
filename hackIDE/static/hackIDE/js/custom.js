@@ -480,11 +480,21 @@ $(document).ready(function(){
 
 
 	// when show-settings is clicked
-	$("#show-settings").click(function(){
+	$("#show-settings").click(function(event){
 
+		event.stopPropagation();
+		
 		// toggle visibility of the pane
 		$("#settings-pane").toggle();
 
+	});
+
+
+	//close settings dropdown
+	$(function(){
+		$(document).click(function(){
+			$('#settings-pane').hide();
+		});
 	});
 
 
