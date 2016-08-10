@@ -1,241 +1,255 @@
-{% load staticfiles %}
-
+﻿{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>hackIDE | Online Code Editor, Compiler &amp; Interpreter</title>
-        
-        <meta name="author" content="sahildua2305" />
-        <meta property="og:url" content="http://hackide.herokuapp.com/"/>
-        <meta property="og:site_name" content=" hackIDE "/>
-        <meta property="og:title" content=" hackIDE | Online Code Editor, Compiler & Interpreter"/>
-        <meta property="og:type" content="website"/>
-        <meta property="og:image" content="http://hackide.herokuapp.com{% static 'hackIDE/img/screenshot.png' %}"/>
-        <meta property="og:description" content="hackIDE is an online code editor, compiler and interpreter based on Django, powered by HackerEarth API, created by Sahil Dua! Go, hack it!"/>
-        <meta name="description" content="hackIDE is an online code editor, compiler and interpreter based on Django, powered by HackerEarth API, created by Sahil Dua! Go, hack it!">
-        <meta name="keywords" content="hackide, ideone, online editor, online code editor, online code compiler, online python compiler, online code interpreter, online ide, hackerearth api ide, sahildua, sahildua2305, sahil2305dua, Sahil, Sahil Dua, Netaji Subhas Institute, New Delhi, sahil nsit, sahil collegespace, sahil developer, API developer">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>hackIDE | Online Code Editor, Compiler &amp; Interpreter</title>
+    <meta name="author" content="sahildua2305" />
+    <meta property="og:url" content="http://hackide.herokuapp.com/" />
+    <meta property="og:site_name" content=" hackIDE " />
+    <meta property="og:title" content=" hackIDE | Online Code Editor, Compiler & Interpreter" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="http://hackide.herokuapp.com{% static 'hackIDE/img/screenshot.png' %}" />
+    <meta property="og:description" content="hackIDE is an online code editor, compiler and interpreter based on Django, powered by HackerEarth API, created by Sahil Dua! Go, hack it!" />
+    <meta name="description" content="hackIDE is an online code editor, compiler and interpreter based on Django, powered by HackerEarth API, created by Sahil Dua! Go, hack it!">
+    <meta name="keywords" content="hackide, ideone, online editor, online code editor, online code compiler, online python compiler, online code interpreter, online ide, hackerearth api ide, sahildua, sahildua2305, sahil2305dua, Sahil, Sahil Dua, Netaji Subhas Institute, New Delhi, sahil nsit, sahil collegespace, sahil developer, API developer">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" type="text/css" href="{% static 'hackIDE/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'hackIDE/css/custom.css' %}" />
+</head>
 
-		<!-- Stylesheets -->
-		<link rel="stylesheet" type="text/css" href="{% static 'hackIDE/css/bootstrap.min.css' %}" />
-		<link rel="stylesheet" type="text/css" href="{% static 'hackIDE/css/custom.css' %}" />
-
-    </head>
-    <body>
-
-        <!-- Hidden input field containing CSRF token required for making AJAX calls to Django -->
-        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
-
-		<nav class="navbar navbar-default">
-			<div class="container">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="/"> hackIDE </a>
-				</div>
-				<ul class="nav navbar-nav navbar-right">
-					<li><a href="/"> New Code </a></li>
-				</ul>
-			</div>
-		</nav>
-
-    	<div class="container">
-
-    		<div class="row">
-
-    			<div class="left col-md-12">
-
-    				<div id="editor-topbar">
-
-    					<div class="lang-choose">
-
-							<select class="form-control" name="lang" id="lang">
-								<option value="C">C (gcc 4.8.1)</option>
-								<option value="CPP" selected>C++ (g++ 4.8.1)</option>
-								<option value="CSHARP">C#</option>
-								<option value="CLOJURE">Clojure (clojure 1.1.0)</option>
-								<option value="CSS">CSS</option>
-								<option value="HASKELL">Haskell (ghc 7.4.1)</option>
-								<option value="JAVA">Java (openjdk 1.7.0_09)</option>
-								<option value="JAVASCRIPT">JavaScript</option>
-								<option value="OBJECTIVEC">Objective-C (clang 3.3)</option>
-								<option value="PERL">Perl (perl 5.14.2)</option>
-								<option value="PHP">PHP (php 5.3.10)</option>
-								<option value="PYTHON">Python (python 2.7.3)</option>
-								<option value="R">R (RScript 2.14.1)</option>
-								<option value="RUBY">Ruby (ruby 2.1.1)</option>
-								<option value="RUST">Rust (rustc 1.4.0)</option>
-								<option value="SCALA">Scala (scalac 2.9.1)</option>
-							</select>
-
-						</div> <!-- END of lang-choose -->
-
-						<div id="settings">
-
-							<a class="cursor no-select" id="download-code">
-								<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-							</a>
-							
-							<a class="cursor no-select" id="show-settings">
-								<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-							</a>
-							
-							<div id="settings-pane">
-								<div id="inner-settings-pane"></div>
-								<label>Editor Theme</label>
-								<select class="form-control" name="editor-theme" id="editor-theme">
-									<option value="LIGHT">Light</option>
-									<option value="DARK" selected>Dark</option>
-								</select>
-								<label>Indent Spaces</label>
-								<input class="form-control" name="indent-spaces" id="indent-spaces" type="text" value="4">
-							</div>
-
-						</div> <!-- END of settings-pane -->
-
-    				</div> <!-- END of editor-topbar -->
-    				
-    				<pre id="editor"></pre>
-
-    				<div id="editor-statusbar"></div>
-
-    			</div>
-
-    			<div class="right col-md-4">
-                    
+<body>
+    <!-- Hidden input field containing CSRF token required for making AJAX calls to Django -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" />
+    <input type="hidden" id='saved_code_content' value="{{ code_content }}" />
+    <input type="hidden" id='saved_code_lang' value="{{ lang }}" />
+    <input type="hidden" id='saved_code_input' value="{{ inp }}" />
+    <input type='hidden' id='compile_status' value={{compile_status}} />
+    <input type='hidden' id='run_status_status' value={{run_status_status}} />
+    <input type='hidden' id='run_status_time' value={{run_status_time}} />
+    <input type='hidden' id='run_status_memory' value={{run_status_memory}} />
+    <input type='hidden' id='run_status_output' value={{run_status_output}} />
+    <input type='hidden' id='run_status_stderr' value={{run_status_stderr}} />
+    <textarea id='copy_link' readonly></textarea>
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/"> hackIDE </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/"> New Code </a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="left col-md-12">
+                <div id="editor-topbar">
+                    <div class="lang-choose">
+                        <select class="form-control" name="lang" id="lang">
+                            <option value="C">C (gcc 4.8.1)</option>
+                            <option value="CPP" selected>C++ (g++ 4.8.1)</option>
+                            <option value="CSHARP">C#</option>
+                            <option value="CLOJURE">Clojure (clojure 1.1.0)</option>
+                            <option value="CSS">CSS</option>
+                            <option value="HASKELL">Haskell (ghc 7.4.1)</option>
+                            <option value="JAVA">Java (openjdk 1.7.0_09)</option>
+                            <option value="JAVASCRIPT">JavaScript</option>
+                            <option value="OBJECTIVEC">Objective-C (clang 3.3)</option>
+                            <option value="PERL">Perl (perl 5.14.2)</option>
+                            <option value="PHP">PHP (php 5.3.10)</option>
+                            <option value="PYTHON">Python (python 2.7.3)</option>
+                            <option value="R">R (RScript 2.14.1)</option>
+                            <option value="RUBY">Ruby (ruby 2.1.1)</option>
+                            <option value="RUST">Rust (rustc 1.4.0)</option>
+                            <option value="SCALA">Scala (scalac 2.9.1)</option>
+                        </select>
+                    </div>
+                    <!-- END of lang-choose -->
+                    <div id="settings">
+                        <a class="cursor no-select" id="download-code">
+                            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                        </a>
+                        <a class="cursor no-select" id="show-settings">
+                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                        </a>
+                        <div id="settings-pane">
+                            <div id="inner-settings-pane"></div>
+                            <label>Editor Theme</label>
+                            <select class="form-control" name="editor-theme" id="editor-theme">
+                                <option value="LIGHT">Light</option>
+                                <option value="DARK" selected>Dark</option>
+                            </select>
+                            <label>Indent Spaces</label>
+                            <input class="form-control" name="indent-spaces" id="indent-spaces" type="text" value="4">
+                        </div>
+                    </div>
+                    <!-- END of settings-pane -->
                 </div>
+                <!-- END of editor-topbar -->
+                <pre id="editor"></pre>
+                <div id="editor-statusbar"></div>
+            </div>
+            <div class="right col-md-4">
+            </div>
+        </div>
+        <!-- END of row -->
+        <div class="row">
+            <div class="col-md-12 right" id="show-results">
+                <div class="pull-left custom-input-panel">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="custom-input-checkbox"> Use custom input to test the code
+                        </label>
+                    </div>
+                </div>
+                <div class="pull-right run-save-panel">
+                    <span id='copy_code'></span>
+                    <button class="btn btn-info" id="compile-code" data-toggle="tooltip" data-placement="top" title="Press Shift+Enter">Compile it!</button>
+                    <button class="btn btn-success" id="run-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+Enter">Hack(run) it!</button>
+                </div>
+            </div>
+        </div>
+        <!-- END of row -->
+        <div class="row">
+            <div class="col-md-12 right">
+                <!-- custom input textarea -->
+                <div class="custom-input-container">
+                    <textarea id="custom-input" class="nice-textarea" placeholder="Custom input"></textarea>
+                </div>
+            </div>
+        </div>
+        <!-- END of row -->
+        <div class="row">
+            <div class="col-md-12 right">
+                <div class="output-response-box">
+                    <div class="output-details">
+                        <div class="output-details-info run-status">
+                            <div class="key">Run Status:</div>
+                            <div class="value"></div>
+                        </div>
+                        <div class="output-details-info compile-status">
+                            <div class="key">Compile Status:</div>
+                            <div class="value"></div>
+                        </div>
+                        <div class="output-details-info time-sec">
+                            <div class="key">Time (sec):</div>
+                            <div class="value"></div>
+                        </div>
+                        <div class="output-details-info memory-kb">
+                            <div class="key">Memory (KB):</div>
+                            <div class="value"></div>
+                        </div>
+                    </div>
+                    <div class="output-io">
+                        <div class="output-error-box">
+                            <div class="error-key"></div>
+                            <pre class="error-message"></pre>
+                        </div>
+                        <div class="output-io-info output-i-info">
+                            <div class="key">Input (stdin)</div>
+                            <pre class="output-text output-i"> </pre>
+                            <span class="output-empty-message output-i-message"><i>Standard input is empty</i></span>
+                        </div>
+                        <div class="output-io-info output-o-info">
+                            <div class="key">Output (stdout)</div>
+                            <pre class="output-text output-o"> </pre>
+                            <span class="output-empty-message output-o-message"><i>Standard output is empty</i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END of container -->
+    <footer class="container">
+        <span class="pull-left"> Powered by <a href="https://www.hackerearth.com/docs/api/developers/code/v3/" target="_blank">HackerEarth API</a> </span>
+        <span class="pull-right"> Copyrights © <a href="http://sahildua.com" target="_blank">Sahil Dua</a> 2016 | Made with <span style="color: #f7403a">&hearts;</span> in India </span>
+    </footer>
+    <a href="https://github.com/sahildua2305/hackIDE" title="Fork me on GitHub" class="github-corner" target="_blank">
+        <svg width="50" height="50" viewBox="0 0 250 250">
+            <title>Fork me on GitHub</title>
+            <path d="M0 0h250v250"></path>
+            <path d="M127.4 110c-14.6-9.2-9.4-19.5-9.4-19.5 3-7 1.5-11 1.5-11-1-6.2 3-2 3-2 4 4.7 2 11 2 11-2.2 10.4 5 14.8 9 16.2" fill="currentColor" style="transform-origin:130px 110px" class="octo-arm"></path>
+            <path d="M113.2 114.3s3.6 1.6 4.7.6l15-13.7c3-2.4 6-3 8.2-2.7-8-11.2-14-25 3-41 4.7-4.4 10.6-6.4 16.2-6.4.6-1.6 3.6-7.3 11.8-10.7 0 0 4.5 2.7 6.8 16.5 4.3 2.7 8.3 6 12 9.8 3.3 3.5 6.7 8 8.6 12.3 14 3 16.8 8 16.8 8-3.4 8-9.4 11-11.4 11 0 5.8-2.3 11-7.5 15.5-16.4 16-30 9-40 .2 0 3-1 7-5.2 11l-13.3 11c-1 1 .5 5.3.8 5z" fill="currentColor" class="octo-body"></path>
+        </svg>
+        <style>
+        .github-corner svg {
+            position: absolute;
+            right: 0;
+            top: 0;
+            mix-blend-mode: darken;
+            color: #ffffff;
+            fill: #000000;
+        }
+        
+        .github-corner:hover .octo-arm {
+            animation: octocat-wave .56s;
+        }
+        
+        @keyframes octocat-wave {
+            0%,
+            100% {
+                transform: rotate(0);
+            }
+            20%,
+            60% {
+                transform: rotate(-20deg);
+            }
+            40%,
+            80% {
+                transform: rotate(10deg);
+            }
+        }
+        </style>
+    </a>
+    <!-- jQuery -->
+    <script src="{% static 'hackIDE/js/jquery.min.js' %}" type="text/javascript" charset="utf-8"></script>
+    <!-- Bootstrap (include all individual files below) -->
+    <script src="{% static 'hackIDE/js/custom.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'hackIDE/js/FileSaver.min.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'hackIDE/js/jszip.min.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'hackIDE/js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'hackIDE/ace-builds/src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'hackIDE/ace-builds/src/ext-statusbar.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'hackIDE/ace-builds/src/ext-language_tools.js' %}" type="text/javascript" charset="utf-8"></script>
+    <!-- Include all the custom js here -->
+    <!-- Start of Google Analytics Code -->
+    <script>
+    (function(i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-    		</div> <!-- END of row -->
+    ga('create', 'UA-40193912-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+    <!-- End of Google Analytics Code-->
+    <!-- Start of StatCounter Code for Default Guide -->
+    <script type="text/javascript">
+    var sc_project = 9940142;
+    var sc_invisible = 1;
+    var sc_security = "b0991b09";
+    var scJsHost = (("https:" == document.location.protocol) ? "https://secure." : "http://www.");
+    document.write("<sc" + "ript type='text/javascript' src='" +
+        scJsHost + "statcounter.com/counter/counter.js'></" + "script>");
+    </script>
+    <noscript>
+        <div class="statcounter">
+            <a title="site stats" href="http://statcounter.com/" target="_blank"><img class="statcounter" src="http://c.statcounter.com/9940142/0/b0991b09/1/" alt="site stats"></a>
+        </div>
+    </noscript>
+    <!-- End of StatCounter Code for Default Guide -->
+</body>
 
-    		<div class="row">
-    			<div class="col-md-12 right" id="show-results">
-    				<div class="pull-left custom-input-panel">
-						<div class="checkbox">
-							<label>
-								<input type="checkbox" id="custom-input-checkbox"> Use custom input to test the code
-							</label>
-						</div>
-    				</div>
-    				<div class="pull-right run-save-panel">
-	    				<button class="btn btn-info" id="compile-code" data-toggle="tooltip" data-placement="top" title="Press Shift+Enter">Compile it!</button>
-	    				<button class="btn btn-success" id="run-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+Enter">Hack(run) it!</button>
-	    			</div>
-    			</div>
-    		</div> <!-- END of row -->
-
-    		<div class="row">
-    			<div class="col-md-12 right">
-	    			<!-- custom input textarea -->
-					<div class="custom-input-container">
-						<textarea id="custom-input" class="nice-textarea" placeholder="Custom input"></textarea>
-					</div>
-				</div>
-    		</div> <!-- END of row -->
-
-    		<div class="row">
-    			<div class="col-md-12 right">
-    				<div class="output-response-box">
-    					<div class="output-details">
-    						<div class="output-details-info run-status">
-    							<div class="key">Run Status:</div>
-    							<div class="value"></div>
-    						</div>
-    						<div class="output-details-info compile-status">
-    							<div class="key">Compile Status:</div>
-    							<div class="value"></div>
-    						</div>
-    						<div class="output-details-info time-sec">
-    							<div class="key">Time (sec):</div>
-    							<div class="value"></div>
-    						</div>
-    						<div class="output-details-info memory-kb">
-    							<div class="key">Memory (KB):</div>
-    							<div class="value"></div>
-    						</div>
-    					</div>
-
-    					<div class="output-io">
-                            <div class="output-error-box">
-                                <div class="error-key"></div>
-                                <pre class="error-message"></pre>
-                            </div>
-    						<div class="output-io-info output-i-info">
-    							<div class="key">Input (stdin)</div>
-    							<pre class="output-text output-i"> </pre>
-    							<span class="output-empty-message output-i-message"><i>Standard input is empty</i></span>
-    						</div>
-    						<div class="output-io-info output-o-info">
-    							<div class="key">Output (stdout)</div>
-    							<pre class="output-text output-o"> </pre>
-    							<span class="output-empty-message output-o-message"><i>Standard output is empty</i></span>
-    						</div>
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-
-    	</div> <!-- END of container -->
-
-
-    	<footer class="container">
-    		<span class="pull-left"> Powered by <a href="https://www.hackerearth.com/docs/api/developers/code/v3/" target="_blank">HackerEarth API</a> </span>
-    		<span class="pull-right"> Copyrights © <a href="http://sahildua.com" target="_blank">Sahil Dua</a> 2016 | Made with <span style="color: #f7403a">&hearts;</span> in India </span>
-    	</footer>
-
-        <a href="https://github.com/sahildua2305/hackIDE" title="Fork me on GitHub" class="github-corner" target="_blank">
-            <svg width="50" height="50" viewBox="0 0 250 250">
-                <title>Fork me on GitHub</title>
-                <path d="M0 0h250v250"></path>
-                <path d="M127.4 110c-14.6-9.2-9.4-19.5-9.4-19.5 3-7 1.5-11 1.5-11-1-6.2 3-2 3-2 4 4.7 2 11 2 11-2.2 10.4 5 14.8 9 16.2" fill="currentColor" style="transform-origin:130px 110px" class="octo-arm"></path>
-                <path d="M113.2 114.3s3.6 1.6 4.7.6l15-13.7c3-2.4 6-3 8.2-2.7-8-11.2-14-25 3-41 4.7-4.4 10.6-6.4 16.2-6.4.6-1.6 3.6-7.3 11.8-10.7 0 0 4.5 2.7 6.8 16.5 4.3 2.7 8.3 6 12 9.8 3.3 3.5 6.7 8 8.6 12.3 14 3 16.8 8 16.8 8-3.4 8-9.4 11-11.4 11 0 5.8-2.3 11-7.5 15.5-16.4 16-30 9-40 .2 0 3-1 7-5.2 11l-13.3 11c-1 1 .5 5.3.8 5z" fill="currentColor" class="octo-body"></path>
-            </svg>
-            <style> .github-corner svg{position:absolute;right:0;top:0;mix-blend-mode:darken;color:#ffffff;fill:#000000;}.github-corner:hover .octo-arm{animation:octocat-wave .56s;}@keyframes octocat-wave{0%, 100%{transform:rotate(0);}20%, 60%{transform:rotate(-20deg);}40%, 80%{transform:rotate(10deg);}}
-            </style>
-        </a>
-
-
-    	<!-- jQuery -->
-    	<script src="{% static 'hackIDE/js/jquery.min.js' %}" type="text/javascript" charset="utf-8"></script>
-
-    	<!-- Bootstrap (include all individual files below) -->
-    	<script src="{% static 'hackIDE/js/custom.js' %}" type="text/javascript" charset="utf-8"></script>
-        <script src="{% static 'hackIDE/js/FileSaver.min.js' %}" type="text/javascript" charset="utf-8"></script>
-        <script src="{% static 'hackIDE/js/jszip.min.js' %}" type="text/javascript" charset="utf-8"></script>
-    	<script src="{% static 'hackIDE/js/bootstrap.min.js' %}" type="text/javascript" charset="utf-8"></script>
-    	<script src="{% static 'hackIDE/ace-builds/src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
-    	<script src="{% static 'hackIDE/ace-builds/src/ext-statusbar.js' %}" type="text/javascript" charset="utf-8"></script>
-    	<script src="{% static 'hackIDE/ace-builds/src/ext-language_tools.js' %}" type="text/javascript" charset="utf-8"></script>
-
-    	<!-- Include all the custom js here -->
-
-        <!-- Start of Google Analytics Code -->
-		<script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-            ga('create', 'UA-40193912-2', 'auto');
-            ga('send', 'pageview');
-        </script>
-        <!-- End of Google Analytics Code-->
-
-        <!-- Start of StatCounter Code for Default Guide -->
-        <script type="text/javascript">
-            var sc_project=9940142; 
-            var sc_invisible=1;
-            var sc_security="b0991b09";
-            var scJsHost = (("https:" == document.location.protocol) ? "https://secure." : "http://www.");
-            document.write("<sc"+"ript type='text/javascript' src='" +
-            scJsHost + "statcounter.com/counter/counter.js'></"+"script>");
-        </script>
-        <noscript><div class="statcounter"><a title="site stats"
-        href="http://statcounter.com/" target="_blank"><img
-        class="statcounter"
-        src="http://c.statcounter.com/9940142/0/b0991b09/1/"
-        alt="site stats"></a></div></noscript>
-        <!-- End of StatCounter Code for Default Guide -->
-
-    </body>
 </html>

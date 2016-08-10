@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from mongoengine import connect
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -85,6 +86,9 @@ DATABASES = {
     }
 }
 
+# use your db creds here
+# TODO: Update with new host details before making live on heroku
+connect(host='mongodb://JSSaini08:hackidecodes@ds011705.mlab.com:11705/codes')
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
