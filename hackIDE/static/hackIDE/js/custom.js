@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   Sahil Dua
-* @Last Modified time: 2016-05-17 19:39:19
+* @Last Modified time: 2016-08-10 23:48:40
 */
 
 
@@ -70,31 +70,22 @@ $(document).ready(function(){
 	var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"));
 
 
-	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
-
 	checkForInitialData();
 	
-	function showResultBox()
-	{
+	function showResultBox() {
 		$(".output-response-box").show();
 		$(".run-status").show();
 		$(".time-sec").show();
 		$(".memory-kb").show();
-		compile_status=document.getElementById('compile_status').value; 
-    run_status_status=document.getElementById('run_status_status').value;
-    run_status_time=document.getElementById('run_status_time').value;
-    run_status_memory=document.getElementById('run_status_memory').value;
-    run_status_output=document.getElementById('run_status_output').value;
-    run_status_stderr=document.getElementById('run_status_stderr').value;
-		console.log(compile_status)
-		console.log(run_status_status)
-		console.log(run_status_time)
-		console.log(run_status_memory)
-		console.log(run_status_output)
-		console.log(run_status_stderr)
+		var compile_status = document.getElementById('compile_status').value;
+		var run_status_status = document.getElementById('run_status_status').value;
+		var run_status_time = document.getElementById('run_status_time').value;
+		var run_status_memory = document.getElementById('run_status_memory').value;
+		var run_status_output = document.getElementById('run_status_output').value;
+		var run_status_stderr = document.getElementById('run_status_stderr').value;
 		
-		if(compile_status == "OK"){
-			if(run_status_status == "AC"){
+		if(compile_status == "OK") {
+			if(run_status_status == "AC") {
 				$(".output-io").show();
 				$(".output-error-box").hide();
 				$(".output-io-info").show();
@@ -104,7 +95,7 @@ $(document).ready(function(){
 				$(".memory-kb").children(".value").html(run_status_memory);
 				$(".output-o").html(run_status_output);
 			}
-			else{
+			else {
 				$(".output-io").show();
 				$(".output-io-info").hide();
 				$(".output-error-box").show();
@@ -116,7 +107,7 @@ $(document).ready(function(){
 				$(".error-message").html(run_status_stderr);
 			}
 		}
-		else{
+		else {
 			$(".output-io").show();
 			$(".output-io-info").hide();
 			$(".compile-status").children(".value").html("--");
@@ -129,14 +120,13 @@ $(document).ready(function(){
 	}
 	
 	function checkForInitialData() {
-		code_content=document.getElementById('saved_code_content').value;
-		code_lang=document.getElementById('saved_code_lang').value;
-		code_input=document.getElementById('saved_code_input').value;
-		if(code_content!=""&&code_content!=undefined&&code_content!=null)
-		{
-			languageSelected =code_lang;
-			$('option:selected')[0].selected=false;
-			$("option[value='"+code_lang+"']")[0].selected=true;
+		var code_content = document.getElementById('saved_code_content').value;
+		var code_lang = document.getElementById('saved_code_lang').value;
+		var code_input = document.getElementById('saved_code_input').value;
+		if(code_content != "" && code_content != undefined && code_content != null) {
+			languageSelected = code_lang;
+			$('option:selected')[0].selected = false;
+			$("option[value='"+code_lang+"']")[0].selected = true;
 			editor.setValue(code_content);
 			$(".output-i").html(code_input);
 			$('#custom-input').val(code_input);
@@ -144,18 +134,16 @@ $(document).ready(function(){
 		}
 	}
 
-	$('#copy_code').on('mousedown',function(){
+	$('#copy_code').on('mousedown', function() {
 		initialVal=$('#copy_code')[0].innerHTML;
-    $('#copy_link')[0].value=$('#copy_code').text();
-    $('#copy_link').select();
-    document.execCommand('copy');
-    this.innerHTML='<kbd>Link Copied To Clipboard</kbd>';
-    $('body').on('mouseup',function(){
-      $('#copy_code')[0].innerHTML=initialVal;
-    });
-  });
-
-	//--------------------------------------------------------------------------------------------------------------------------------------------------------//
+		$('#copy_link')[0].value = $('#copy_code').text();
+		$('#copy_link').select();
+		document.execCommand('copy');
+		this.innerHTML = '<kbd>Link Copied To Clipboard</kbd>';
+		$('body').on('mouseup',function(){
+			$('#copy_code')[0].innerHTML = initialVal;
+		});
+	});
 
 	/**
 	 * function to update editorContent with current content of editor
@@ -230,10 +218,9 @@ $(document).ready(function(){
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
 		
-		// if code_id present in url and /compile/ or /run/ is called change url
-		if(window.location.href.includes('code_id'))
-		{	
-				COMPILE_URL='/../compile/';
+		// if code_id present in url and updated compile URL
+		if(window.location.href.includes('code_id')) {
+			COMPILE_URL = '/../compile/';
 		}
 
 		var compile_data = {
@@ -243,7 +230,7 @@ $(document).ready(function(){
 		};
 
 		request_ongoing = true;
-	
+
 		// AJAX request to Django for compiling code
 		$.ajax({
 			url: COMPILE_URL,
@@ -351,10 +338,9 @@ $(document).ready(function(){
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
 		
-		// if code_id present in url and /compile/ or /run/ is called change url
-		if(window.location.href.includes('code_id'))
-		{
-				RUN_URL='/../run/';
+		// if code_id present in url and update run URL
+		if(window.location.href.includes('code_id')) {
+			RUN_URL = '/../run/';
 		}
 
 		var input_given = $("#custom-input").val();
@@ -378,9 +364,8 @@ $(document).ready(function(){
 				success: function(response){
 					request_ongoing = false;
 					
-					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'/code_id='+response.code_id+'/</kbd>';
-					$('#copy_code').css({'display':'initial'});
-
+					$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
+					$('#copy_code').css({'display': 'initial'});
 					
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
@@ -436,7 +421,7 @@ $(document).ready(function(){
 				error: function(error){
 
 					request_ongoing = false;
-					
+
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
 
