@@ -70,6 +70,93 @@ $(document).ready(function(){
 	var statusBar = new StatusBar(editor, document.getElementById("editor-statusbar"));
 
 
+	//------------------------------------------------------------------------------------------------------------------------------------------------------------//
+
+	checkForInitialData();
+	
+	function showResultBox()
+	{
+		$(".output-response-box").show();
+		$(".run-status").show();
+		$(".time-sec").show();
+		$(".memory-kb").show();
+		compile_status=document.getElementById('compile_status').value; 
+    run_status_status=document.getElementById('run_status_status').value;
+    run_status_time=document.getElementById('run_status_time').value;
+    run_status_memory=document.getElementById('run_status_memory').value;
+    run_status_output=document.getElementById('run_status_output').value;
+    run_status_stderr=document.getElementById('run_status_stderr').value;
+		console.log(compile_status)
+		console.log(run_status_status)
+		console.log(run_status_time)
+		console.log(run_status_memory)
+		console.log(run_status_output)
+		console.log(run_status_stderr)
+		
+		if(compile_status == "OK"){
+			if(run_status_status == "AC"){
+				$(".output-io").show();
+				$(".output-error-box").hide();
+				$(".output-io-info").show();
+				$(".compile-status").children(".value").html(compile_status);
+				$(".run-status").children(".value").html(run_status_status);
+				$(".time-sec").children(".value").html(run_status_time);
+				$(".memory-kb").children(".value").html(run_status_memory);
+				$(".output-o").html(run_status_output);
+			}
+			else{
+				$(".output-io").show();
+				$(".output-io-info").hide();
+				$(".output-error-box").show();
+				$(".compile-status").children(".value").html(compile_status);
+				$(".run-status").children(".value").html(run_status_status);
+				$(".time-sec").children(".value").html(run_status_time);
+				$(".memory-kb").children(".value").html(run_status_memory);
+				$(".error-key").html("Run-time error (stderr)");
+				$(".error-message").html(run_status_stderr);
+			}
+		}
+		else{
+			$(".output-io").show();
+			$(".output-io-info").hide();
+			$(".compile-status").children(".value").html("--");
+			$(".run-status").children(".value").html("CE");
+			$(".time-sec").children(".value").html("0.0");
+			$(".memory-kb").children(".value").html("0");
+			$(".error-key").html("Compile error");
+			$(".error-message").html(compile_status);
+		}
+	}
+	
+	function checkForInitialData() {
+		code_content=document.getElementById('saved_code_content').value;
+		code_lang=document.getElementById('saved_code_lang').value;
+		code_input=document.getElementById('saved_code_input').value;
+		if(code_content!=""&&code_content!=undefined&&code_content!=null)
+		{
+			languageSelected =code_lang;
+			$('option:selected')[0].selected=false;
+			$("option[value='"+code_lang+"']")[0].selected=true;
+			editor.setValue(code_content);
+			$(".output-i").html(code_input);
+			$('#custom-input').val(code_input);
+			showResultBox();
+		}
+	}
+
+	$('#copy_code').on('mousedown',function(){
+		initialVal=$('#copy_code')[0].innerHTML;
+    $('#copy_link')[0].value=$('#copy_code').text();
+    $('#copy_link').select();
+    document.execCommand('copy');
+    this.innerHTML='<kbd>Link Copied To Clipboard</kbd>';
+    $('body').on('mouseup',function(){
+      $('#copy_code')[0].innerHTML=initialVal;
+    });
+  });
+
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------//
+
 	/**
 	 * function to update editorContent with current content of editor
 	 *
@@ -142,6 +229,12 @@ $(document).ready(function(){
 		updateContent();
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+		
+		// if code_id present in url and /compile/ or /run/ is called change url
+		if(window.location.href.includes('code_id'))
+		{	
+				COMPILE_URL='/../compile/';
+		}
 
 		var compile_data = {
 			source: editorContent,
@@ -150,7 +243,7 @@ $(document).ready(function(){
 		};
 
 		request_ongoing = true;
-
+	
 		// AJAX request to Django for compiling code
 		$.ajax({
 			url: COMPILE_URL,
@@ -257,6 +350,12 @@ $(document).ready(function(){
 		updateContent();
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+		
+		// if code_id present in url and /compile/ or /run/ is called change url
+		if(window.location.href.includes('code_id'))
+		{
+				RUN_URL='/../run/';
+		}
 
 		var input_given = $("#custom-input").val();
 
@@ -277,9 +376,12 @@ $(document).ready(function(){
 				dataType: "json",
 				timeout: 10000,
 				success: function(response){
-
 					request_ongoing = false;
+					
+					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'/code_id='+response.code_id+'/</kbd>';
+					$('#copy_code').css({'display':'initial'});
 
+					
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
 
@@ -334,7 +436,7 @@ $(document).ready(function(){
 				error: function(error){
 
 					request_ongoing = false;
-
+					
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
 
@@ -377,6 +479,8 @@ $(document).ready(function(){
 				dataType: "json",
 				timeout: timeout_ms,
 				success: function(response){
+					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'/code_id='+response.code_id+'/</kbd>';
+					$('#copy_code').css({'display':'initial'});
 
 					request_ongoing = false;
 

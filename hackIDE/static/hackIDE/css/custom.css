@@ -40,6 +40,10 @@ pre {
 	border: 1px solid #c2c7d0;
 }
 
+#copy_link {
+opacity:0;
+}
+
 .cursor {
 	cursor: pointer;
 }
@@ -50,6 +54,10 @@ pre {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+}
+
+#copy_code {
+  display:none;
 }
 
 .left {
