@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   Sahil Dua
-* @Last Modified time: 2016-08-10 23:48:40
+* @Last Modified time: 2016-08-10 23:50:13
 */
 
 
@@ -464,8 +464,8 @@ $(document).ready(function(){
 				dataType: "json",
 				timeout: timeout_ms,
 				success: function(response){
-					$('#copy_code')[0].innerHTML='<kbd>'+window.location.hostname+'/code_id='+response.code_id+'/</kbd>';
-					$('#copy_code').css({'display':'initial'});
+					$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
+					$('#copy_code').css({'display': 'initial'});
 
 					request_ongoing = false;
 

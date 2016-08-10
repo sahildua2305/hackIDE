@@ -3,19 +3,17 @@
 # @Author: sahildua2305
 # @Date:   2016-01-06 00:11:27
 # @Last Modified by:   Sahil Dua
-# @Last Modified time: 2016-05-19 23:43:09
+# @Last Modified time: 2016-08-10 23:54:39
 
 
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseForbidden
 from models import codes
 
-import requests,json, os
-
+import requests, json, o
 
 COMPILE_URL = "https://api.hackerearth.com/v3/code/compile/"
 RUN_URL = "https://api.hackerearth.com/v3/code/run/"
-
 
 # access config variable
 DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
@@ -134,16 +132,15 @@ def runCode(request):
 			}
 
 			# if input is present in the request
-			code_input=""
+			code_input = ""
 			if 'input' in request.POST:
 				run_data['input'] = request.POST['input']
-                                code_input=run_data['input']
+				code_input = run_data['input']
+
 			"""
 			Make call to /run/ endpoint of HackerEarth API
+			and save code and result in database
 			"""
-			"""
-                        save code and result in database
-                        """
 			r = requests.post(RUN_URL, data=run_data)
 			r=r.json()
 			cs=""
@@ -153,61 +150,61 @@ def runCode(request):
 			rso=""
 			rsstdr=""
 			try:
-                                cs= r['compile_status']
-                        except:
-                                pass
-                        try:
-                                rss=r['run_status']['status']
-                        except:
-                                pass
-                        try:
-                                rst=r['run_status']['time_used']
-                        except:
-                                pass
-                        try:
-                                rsm=r['run_status']['memory_used']
-                        except:
-                                pass
-                        try:
-                                rso=r['run_status']['output_html']
-                        except:
-                                pass
-                        try:
-                                rsstdr=r['run_status']['stderr']
-                        except:
-                                pass
-                        
+								cs= r['compile_status']
+						except:
+								pass
+						try:
+								rss=r['run_status']['status']
+						except:
+								pass
+						try:
+								rst=r['run_status']['time_used']
+						except:
+								pass
+						try:
+								rsm=r['run_status']['memory_used']
+						except:
+								pass
+						try:
+								rso=r['run_status']['output_html']
+						except:
+								pass
+						try:
+								rsstdr=r['run_status']['stderr']
+						except:
+								pass
+						
 			code_response = codes.objects.create(
-                        code_id=r['code_id'],
-                        code_content=source,
-                        lang=lang,
-                        code_input=code_input,
-                        compile_status= cs,
-                        run_status_status=rss,
-                        run_status_time=rst,
-                        run_status_memory=rsm,
-                        run_status_output=rso,
-                        run_status_stderr=rsstdr
-                        )
+						code_id=r['code_id'],
+						code_content=source,
+						lang=lang,
+						code_input=code_input,
+						compile_status= cs,
+						run_status_status=rss,
+						run_status_time=rst,
+						run_status_memory=rsm,
+						run_status_output=rso,
+						run_status_stderr=rsstdr
+						)
 			code_response.save()
 			return JsonResponse(r, safe=False)
 	else:
 		return HttpResponseForbidden()
 
 def savedCodeView(request, code_id):
-                result=codes.objects(code_id=code_id)
-                result=result[0].to_json()
-                result=json.loads(result)
-                code_content=result['code_content']
-                lang=result['lang']
-                code_input=result['code_input']
-                compile_status=str(result['compile_status'].encode('utf-8')).decode('utf-8')
-                run_status_status=result['run_status_status']
-                run_status_time=result['run_status_time']
-                run_status_memory=result['run_status_memory']
-                run_status_output=result['run_status_output']
-                run_status_stderr=result['run_status_stderr']
+				result=codes.objects(code_id=code_id)
+				result=result[0].to_json()
+				result=json.loads(result)
+				code_content=result['code_content']
+				lang=result['lang']
+				code_input=result['code_input']
+				compile_status=str(result['compile_status'].encode('utf-8')).decode('utf-8')
+				run_status_status=result['run_status_status']
+				run_status_time=result['run_status_time']
+				run_status_memory=result['run_status_memory']
+				run_status_output=result['run_status_output']
+				run_status_stderr=result['run_status_stderr']
 
-                return render(request, 'hackIDE/index.html',
-                {'code_content':code_content,'lang':lang,'inp':code_input,'compile_status':compile_status,'run_status_status':run_status_status,'run_status_time':run_status_time,'run_status_output':run_status_output,'run_status_memory':run_status_memory,'run_status_stderr':run_status_status})
-                #return render(request, 'hackIDE/index.html', {})
+				return render(request, 'hackIDE/index.html',
+				{'code_content':code_content,'lang':lang,'inp':code_input,'compile_status':compile_status,'run_status_status':run_status_status,'run_status_time':run_status_time,'run_status_output':run_status_output,'run_status_memory':run_status_memory,'run_status_stderr':run_status_status})
+				#return render(request, 'hackIDE/index.html', {})
