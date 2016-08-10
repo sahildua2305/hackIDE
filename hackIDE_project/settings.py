@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from mongoengine import connect
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+h*i@$52+w(_e#etvzgnkjq!q0ajz1qpgs-y9%89x4w3nlct=m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
 # DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
 
 ALLOWED_HOSTS = ['hackide.herokuapp.com'] if not DEBUG else ['*']
@@ -85,9 +86,8 @@ DATABASES = {
     }
 }
 
-
-#use your db creds here
-from mongoengine import connect
+# use your db creds here
+# TODO: Update with new host details before making live on heroku
 connect(host='mongodb://JSSaini08:hackidecodes@ds011705.mlab.com:11705/codes')
 
 # Password validation
