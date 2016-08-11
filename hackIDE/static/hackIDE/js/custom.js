@@ -71,7 +71,7 @@ $(document).ready(function(){
 
 
 	checkForInitialData();
-	
+
 	function showResultBox() {
 		$(".output-response-box").show();
 		$(".run-status").show();
@@ -83,7 +83,7 @@ $(document).ready(function(){
 		var run_status_memory = document.getElementById('run_status_memory').value;
 		var run_status_output = document.getElementById('run_status_output').value;
 		var run_status_stderr = document.getElementById('run_status_stderr').value;
-		
+
 		if(compile_status == "OK") {
 			if(run_status_status == "AC") {
 				$(".output-io").show();
@@ -118,7 +118,7 @@ $(document).ready(function(){
 			$(".error-message").html(compile_status);
 		}
 	}
-	
+
 	function checkForInitialData() {
 		var code_content = document.getElementById('saved_code_content').value;
 		var code_lang = document.getElementById('saved_code_lang').value;
@@ -183,9 +183,9 @@ $(document).ready(function(){
 	 *
 	 */
 	function downloadFile(filename, text, lang) {
-		
+
 		var ext = translateLangToExt(lang);
-		
+
 		var zip = new JSZip()
 		zip.file(filename+"."+ext, text)
 		var downloaded = zip.generate({type : "blob"})
@@ -217,7 +217,7 @@ $(document).ready(function(){
 		updateContent();
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
-		
+
 		// if code_id present in url and updated compile URL
 		if(window.location.href.includes('code_id')) {
 			COMPILE_URL = '/../compile/';
@@ -337,7 +337,7 @@ $(document).ready(function(){
 		updateContent();
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
-		
+
 		// if code_id present in url and update run URL
 		if(window.location.href.includes('code_id')) {
 			RUN_URL = '/../run/';
@@ -363,10 +363,10 @@ $(document).ready(function(){
 				timeout: 10000,
 				success: function(response){
 					request_ongoing = false;
-					
+
 					$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
 					$('#copy_code').css({'display': 'initial'});
-					
+
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
 
@@ -572,7 +572,7 @@ $(document).ready(function(){
 	$("#show-settings").click(function(event){
 
 		event.stopPropagation();
-		
+
 		// toggle visibility of the pane
 		$("#settings-pane").toggle();
 
@@ -595,7 +595,7 @@ $(document).ready(function(){
 		downloadFile("code", editorContent, $("#lang").val());
 
 	});
-	
+
 	// when lang is changed
 	$("#lang").change(function(){
 
@@ -735,5 +735,12 @@ $(document).ready(function(){
 		runCode();
 
 	});
+
+	// check if input box is to be show
+	if($('#custom-input').val()!="")
+	{
+		$('#custom-input-checkbox').click();
+	}
+
 
 });
