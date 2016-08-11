@@ -364,7 +364,11 @@ $(document).ready(function(){
 				success: function(response){
 					request_ongoing = false;
 					
-					$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
+					if(location.port == "")
+						$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
+					else
+						$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + ':' +  location.port +'/code_id=' + response.code_id + '/</kbd>';
+
 					$('#copy_code').css({'display': 'initial'});
 					
 					// Change button text when this method is called
@@ -464,7 +468,11 @@ $(document).ready(function(){
 				dataType: "json",
 				timeout: timeout_ms,
 				success: function(response){
-					$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
+					if(location.port == "")
+						$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
+					else
+						$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + ':' +  location.port +'/code_id=' + response.code_id + '/</kbd>';
+
 					$('#copy_code').css({'display': 'initial'});
 
 					request_ongoing = false;
