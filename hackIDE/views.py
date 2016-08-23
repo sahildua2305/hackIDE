@@ -8,7 +8,8 @@
 
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseForbidden
-from models import codes
+from models import codes, Users
+from passlib.hash import sha256_crypt
 
 import requests, json, os
 
@@ -61,7 +62,11 @@ simply renders the index.html template
 """
 def index(request):
   # render the index.html
-  return render(request, 'hackIDE/index.html', {})
+  logged_in = False
+  if request.session.has_key('username'):
+    logged_in = True
+
+  return render(request, 'hackIDE/index.html', {'logged_in':logged_in,})
 
 
 """
@@ -221,3 +226,226 @@ def savedCodeView(request, code_id):
     'run_status_memory': run_status_memory,
     'run_status_stderr': run_status_status
   })
+
+
+def register(request):
+  if request.is_ajax():
+    username = request.POST['username']
+    email = request.POST['email']
+    password = sha256_crypt.encrypt(str(request.POST['password']))
+    users = Users.objects()
+
+    error_username = ""
+    error_email = ""
+    msg = ""
+    flag = False
+
+    print users
+    for user in users:
+      if username == user.username:
+        error_username = "Username already exist"
+        flag = True
+      if email == user.email:
+        error_email = "Email already exist"
+        flag = True
+
+    print error_username
+    print error_email
+
+    if flag == False:
+      new_user = Users.objects.create(username=username, email=email, password=password, code="")
+      new_user.save()
+      request.session['username'] = username
+
+      msg = "Succesfully Registered"
+      print msg
+
+    r = {'msg':msg, 'error_username':error_username, 'error_email':error_email}
+    return JsonResponse(r, safe=False)
+
+  else:
+    return HttpResponseForbidden()
+
+
+def login(request):
+  if request.is_ajax():
+    try:
+      username = request.POST['username']
+      password = request.POST['password']
+
+      users = Users.objects()
+
+      msg = "Invalid credentials"
+
+      for user in users:
+        if username == user.username and sha256_crypt.verify(str(password), user.password):
+          msg = "Successfully logged in"
+          request.session['username'] = username
+
+      print msg
+      r = {'msg':msg, 'username' : username}
+      return JsonResponse(r, safe=False)
+    
+    except Exception as e:
+      print e
+
+  else:
+    return HttpResponseForbidden()
+
+
+def logout(request):
+  if request.is_ajax():
+    del request.session['username']
+    msg = "Successfully Logged out"
+    r = {'msg':msg}
+    return JsonResponse(r, safe=False)
+  else:
+    return HttpResponseForbidden()
+
+
+def savetoprofile(request):
+  if request.is_ajax():
+    try:
+      source = request.POST['source']
+      # Handle Empty Source Case
+      source_empty_check(source)
+
+      lang = request.POST['lang']
+      # Handle Invalid Language Case
+      lang_valid_check(lang)
+
+    except KeyError:
+      # Handle case when at least one of the keys (lang or source) is absent
+      missing_argument_error()
+
+    else:
+      # default value of 5 sec, if not set
+      time_limit = request.POST.get('time_limit', 5)
+      # default value of 262144KB (256MB), if not set
+      memory_limit = request.POST.get('memory_limit', 262144)
+
+      run_data = {
+        'client_secret': CLIENT_SECRET,
+        'async': 0,
+        'source': source,
+        'lang': lang,
+        'time_limit': time_limit,
+        'memory_limit': memory_limit,
+      }
+
+      # if input is present in the request
+      code_input = ""
+      if 'input' in request.POST:
+        run_data['input'] = request.POST['input']
+        code_input = run_data['input']
+
+      """
+      Make call to /run/ endpoint of HackerEarth API
+      and save code and result in database
+      """
+      r = requests.post(RUN_URL, data=run_data)
+      r = r.json()
+      cs = ""
+      rss = ""
+      rst = ""
+      rsm = ""
+      rso = ""
+      rsstdr = ""
+      try:
+        cs = r['compile_status']
+      except:
+        pass
+      try:
+        rss=r['run_status']['status']
+      except:
+        pass
+      try:
+        rst = r['run_status']['time_used']
+      except:
+        pass
+      try:
+        rsm = r['run_status']['memory_used']
+      except:
+        pass
+      try:
+        rso = r['run_status']['output_html']
+      except:
+        pass
+      try:
+        rsstdr = r['run_status']['stderr']
+      except:
+        pass
+
+      code_response = codes.objects.create(
+        code_id = r['code_id'],
+        code_content = source,
+        lang = lang,
+        code_input = code_input,
+        compile_status = cs,
+        run_status_status = rss,
+        run_status_time = rst,
+        run_status_memory = rsm,
+        run_status_output = rso,
+        run_status_stderr = rsstdr
+      )
+      code_response.save()
+
+      username = request.session['username']
+      user = Users.objects.get(username = username)
+      print r['code_id']
+      user.code = str(r['code_id']) + ',' + str(user.code)
+      user.save()
+      print user
+      print "code" + user.code
+
+      return JsonResponse(r, safe=False)
+  else:
+    return HttpResponseForbidden()
+
+
+def displayprofile(request):
+  if request.is_ajax():
+    try:
+      username = request.session['username']
+      user = Users.objects.get(username=username)
+      code_id = user.code
+      code_id = code_id.split(',')
+      code_id.pop()
+      r = {'code_id':code_id}
+
+      return JsonResponse(r, safe=False)
+    
+    except Exception as e:
+      print e
+
+  else:
+    return HttpResponseForbidden()
+
+
+def removecode(request):
+  if request.is_ajax():
+    try:
+      username = request.session['username']
+      user = Users.objects.get(username=username)
+      code_id = user.code
+      code_id = code_id.split(',')
+      
+      for i in range(0, len(code_id)):
+        if code_id[i] == str(request.POST['id']):
+          print "deleted" + code_id[i]
+          code_id.pop(i)
+          break
+
+      code_id = ','.join(code_id)
+
+      user.code = code_id
+      user.save()
+      print user
+
+      r = {}
+      return JsonResponse(r, safe=False)
+    except Exception as e:
+      print e
+
+  else:
+    return HttpResponseForbidden()

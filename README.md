@@ -19,10 +19,10 @@ Note that the IDE may not show up without a valid api token from HackerEarth. To
 
 ```
 $ python manage.py collectstatic
-$ HE_CLIENT_SECRET=<<your token here>> python manage.py runserver
+$ HE_CLIENT_SECRET=your_token_here python manage.py runserver
 ```
 
 ## TODO
  - [x] Add "Download code as a zipped file" option
- - [ ] Implement "Save code on cloud" feature
+ - [x] Implement "Save code on cloud" feature
  - [ ] Implement profiling system allowing users to make their profiles and saving codes in their profiles

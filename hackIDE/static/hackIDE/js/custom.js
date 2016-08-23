@@ -2,7 +2,7 @@
 * @Author: sahildua2305
 * @Date:   2016-01-06 01:50:10
 * @Last Modified by:   Sahil Dua
-* @Last Modified time: 2016-08-10 23:50:13
+* @Last Modified time: 2016-08-13 13:13:25
 */
 
 
@@ -71,7 +71,7 @@ $(document).ready(function(){
 
 
 	checkForInitialData();
-	
+
 	function showResultBox() {
 		$(".output-response-box").show();
 		$(".run-status").show();
@@ -83,7 +83,7 @@ $(document).ready(function(){
 		var run_status_memory = document.getElementById('run_status_memory').value;
 		var run_status_output = document.getElementById('run_status_output').value;
 		var run_status_stderr = document.getElementById('run_status_stderr').value;
-		
+
 		if(compile_status == "OK") {
 			if(run_status_status == "AC") {
 				$(".output-io").show();
@@ -118,7 +118,7 @@ $(document).ready(function(){
 			$(".error-message").html(compile_status);
 		}
 	}
-	
+
 	function checkForInitialData() {
 		var code_content = document.getElementById('saved_code_content').value;
 		var code_lang = document.getElementById('saved_code_lang').value;
@@ -183,9 +183,9 @@ $(document).ready(function(){
 	 *
 	 */
 	function downloadFile(filename, text, lang) {
-		
+
 		var ext = translateLangToExt(lang);
-		
+
 		var zip = new JSZip()
 		zip.file(filename+"."+ext, text)
 		var downloaded = zip.generate({type : "blob"})
@@ -217,7 +217,7 @@ $(document).ready(function(){
 		updateContent();
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
-		
+
 		// if code_id present in url and updated compile URL
 		if(window.location.href.includes('code_id')) {
 			COMPILE_URL = '/../compile/';
@@ -337,7 +337,7 @@ $(document).ready(function(){
 		updateContent();
 
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
-		
+
 		// if code_id present in url and update run URL
 		if(window.location.href.includes('code_id')) {
 			RUN_URL = '/../run/';
@@ -363,14 +363,14 @@ $(document).ready(function(){
 				timeout: 10000,
 				success: function(response){
 					request_ongoing = false;
-					
+
 					if(location.port == "")
 						$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
 					else
 						$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + ':' +  location.port +'/code_id=' + response.code_id + '/</kbd>';
 
 					$('#copy_code').css({'display': 'initial'});
-					
+
 					// Change button text when this method is called
 					$("#run-code").html("Hack(run) it!");
 
@@ -580,7 +580,7 @@ $(document).ready(function(){
 	$("#show-settings").click(function(event){
 
 		event.stopPropagation();
-		
+
 		// toggle visibility of the pane
 		$("#settings-pane").toggle();
 
@@ -603,7 +603,7 @@ $(document).ready(function(){
 		downloadFile("code", editorContent, $("#lang").val());
 
 	});
-	
+
 	// when lang is changed
 	$("#lang").change(function(){
 
@@ -741,6 +741,235 @@ $(document).ready(function(){
 	$("#run-code").click(function(){
 
 		runCode();
+
+	});
+
+	// check if input box is to be show
+	if($('#custom-input').val()!="")
+	{
+		$('#custom-input-checkbox').click();
+	}
+
+
+	$("#register").click(function(){
+		var username = $('#signup_username').val();
+		var email = $("#signup_email").val();
+		var password = $("#signup_password").val();
+		
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+		var form_data = {username : username, email : email, password : password, csrfmiddlewaretoken : csrf_token};
+		$.ajax({
+			url : 'register/',
+			type : 'POST',
+			data : form_data,
+			dataType : 'json',
+			timeout : '10000',
+			success : function(response){
+				$("#error_username").html(response.error_username);
+				$("#error_email").html(response.error_email);
+				$("#msg").html(response.msg);
+				location.reload();
+			},
+		});
+	});
+
+	$('#login').click(function(){
+		var username = $('#login_username').val();
+		var password = $("#login_password").val();
+
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+
+		var login_form_data = {username : username, password : password, csrfmiddlewaretoken : csrf_token};
+
+		$.ajax({
+			url : 'login/',
+			type : 'POST',
+			data : login_form_data,
+			dataType : 'json',
+			timeout : 10000,
+			success : function(response){
+
+				$('#login_msg').html(response.msg);
+				console.log(response.msg);
+				if(response.msg != "Invalid credentials")
+					location.reload();
+			},
+		});
+	});
+
+	$("#logout").click(function(){
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+		logout_data = {csrfmiddlewaretoken:csrf_token}		
+
+		$.ajax({
+			url : 'logout/',
+			type : 'POST',
+			data : logout_data,
+			dataType : 'json',
+			timeout : 10000,
+			success : function(response){
+				console.log(response.msg);
+				location.reload();
+			},
+		});
+	});
+
+	$("#save-code-profile").click(function(){
+
+		// if a run request is ongoing
+		if(request_ongoing)
+			return;
+
+		$("#save-code-profile").html("Saving");
+		// disable button when this method is called
+		$("#compile-code").prop('disabled', true);
+		$("#run-code").prop('disabled', true);
+		$("#save-code-profile").prop('disabled', true);
+
+		// take recent content of the editor for compiling
+		updateContent();
+
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+
+		// if code_id present in url and update run URL
+		if(window.location.href.includes('code_id')) {
+			RUN_URL = '/../run/';
+		}
+
+		var input_given = $("#custom-input").val();
+
+		request_ongoing = true;
+
+		if( $("#custom-input-checkbox").prop('checked') == true ){
+			var run_data = {
+				source: editorContent,
+				lang: languageSelected,
+				input: input_given,
+				csrfmiddlewaretoken: csrf_token
+			};
+			// AJAX request to Django for running code with input
+			$.ajax({
+				url: 'savetoprofile/',
+				type: "POST",
+				data: run_data,
+				dataType: "json",
+				timeout: 10000,
+				success: function(response){
+					request_ongoing = false;
+					$("#save-code-profile").html("Save Code To Profile");
+					// enable button when this method is called
+					$("#compile-code").prop('disabled', false);
+					$("#run-code").prop('disabled', false);
+					$("#save-code-profile").prop('disabled', false);
+
+					console.log("Code Saved");
+
+				},
+				error: function(error){
+
+					request_ongoing = false;
+					$("#save-code-profile").html("Save Code To Profile");
+					// enable button when this method is called
+					$("#compile-code").prop('disabled', false);
+					$("#run-code").prop('disabled', false);
+					$("#save-code-profile").prop('disabled', false);
+					console.log("Code Not Saved");
+				}
+			});
+		}
+		else{
+			var run_data = {
+				source: editorContent,
+				lang: languageSelected,
+				csrfmiddlewaretoken: csrf_token
+			};
+			// AJAX request to Django for running code without input\
+			var timeout_ms = 10000;
+			$.ajax({
+				url: 'savetoprofile/',
+				type: "POST",
+				data: run_data,
+				dataType: "json",
+				timeout: timeout_ms,
+				success: function(response){
+					
+					request_ongoing = false;
+					$("#save-code-profile").html("Save Code To Profile");
+					// enable button when this method is called
+					$("#compile-code").prop('disabled', false);
+					$("#run-code").prop('disabled', false);
+					$("#save-code-profile").prop('disabled', false);
+					console.log("Code Saved");
+				},
+				error: function(error){
+
+					request_ongoing = false;
+					$("#save-code-profile").html("Save Code To Profile");
+					// enable button when this method is called
+					$("#compile-code").prop('disabled', false);
+					$("#run-code").prop('disabled', false);
+					$("#save-code-profile").prop('disabled', false);
+					console.log("Code Not Saved");
+				}
+			});
+		}
+
+	});
+
+	$("#profile_saved_data").on('click', '#close_data', function(){
+
+		var i = $(this).closest('a').attr('id');
+		var parent = $(this).closest('a');
+		console.log(i);
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+		var remove_data = {csrfmiddlewaretoken:csrf_token, id:i};
+
+		$.ajax({
+			url: 'removecode/',
+			type: "POST",
+			data: remove_data,
+			dataType: "json",
+			timeout: 10000,
+			success : function(response){
+				parent.fadeOut('slow', function(){
+					parent.remove();
+					console.log("removed");
+				});
+			},
+		});
+	});
+
+	$("#profile_btn").click(function(){
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+
+		var profile_data = {csrfmiddlewaretoken:csrf_token};
+		$.ajax({
+			url: 'displayprofile/',
+			type: "POST",
+			data: profile_data,
+			dataType: "json",
+			timeout: 10000,
+			success : function(response){
+				$("#profile_saved_data").html("");
+				if(location.port == "")
+				{	
+					for(var i=0;i<response.code_id.length;i++)
+					{	
+						var link = window.location.hostname + "/code_id=" + response.id[i] + "/";
+						$("#profile_saved_data").append("<a class='list-group-item links' href='" + link+ "' id='" + response.code_id[i] + "'>"+response.code_id[i]+" <button type='button' id='close_data' class='close'><span>&times;</span></button></a>");
+					}
+				}
+				else
+				{	
+					for(var i=0;i<response.code_id.length;i++)
+					{
+						var link = window.location.hostname + ":" + location.port +"/code_id=" + response.code_id[i] + "/";
+						$("#profile_saved_data").append("<a class='list-group-item links' href='"+ link + "' id='" + response.code_id[i] + "'>"+response.code_id[i]+"<button type='button'  id='close_data' class='close'><span id='close_data'>&times;</span></button></a>");
+					}
+				}
+			},
+
+		});		
 
 	});
 

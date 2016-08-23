@@ -18,6 +18,12 @@ urlpatterns = [
   url(r'^compile/$', views.compileCode, name='compile'),
   # ex: /run/
   url(r'^run/$', views.runCode, name='run'),
+  url(r'^register/$', views.register, name='register'),
+  url(r'^login/$', views.login, name='login'),
+  url(r'^logout/$', views.logout, name='logout'),
+  url(r'^savetoprofile/$', views.savetoprofile, name='savetoprofile'),
+  url(r'^displayprofile/$', views.displayprofile, name='displayprofile'),
+  url(r'^removecode/$', views.removecode, name='removecode'),
   # ex: /code=ajSkHb/
-  url(r'(?P<code_id>\w{0,50})/$', views.savedCodeView, name='saved-code'),
+  url(r'code_id=((?P<code_id>\w{0,50}))/$', views.savedCodeView, name='saved-code'),
 ]
