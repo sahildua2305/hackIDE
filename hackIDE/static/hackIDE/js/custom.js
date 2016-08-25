@@ -790,7 +790,6 @@ $(document).ready(function(){
 			success : function(response){
 
 				$('#login_msg').html(response.msg);
-				console.log(response.msg);
 				if(response.msg != "Invalid credentials")
 					location.reload();
 			},
@@ -808,7 +807,6 @@ $(document).ready(function(){
 			dataType : 'json',
 			timeout : 10000,
 			success : function(response){
-				console.log(response.msg);
 				location.reload();
 			},
 		});
@@ -861,8 +859,7 @@ $(document).ready(function(){
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
 					$("#save-code-profile").prop('disabled', false);
-
-					console.log("Code Saved");
+					$("#save-code-profile").html("Saved");
 
 				},
 				error: function(error){
@@ -873,7 +870,6 @@ $(document).ready(function(){
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
 					$("#save-code-profile").prop('disabled', false);
-					console.log("Code Not Saved");
 				}
 			});
 		}
@@ -899,7 +895,8 @@ $(document).ready(function(){
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
 					$("#save-code-profile").prop('disabled', false);
-					console.log("Code Saved");
+					$("#save-code-profile").prop('disabled', true);
+					$("#save-code-profile").html("Saved");
 				},
 				error: function(error){
 
@@ -909,7 +906,6 @@ $(document).ready(function(){
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
 					$("#save-code-profile").prop('disabled', false);
-					console.log("Code Not Saved");
 				}
 			});
 		}
@@ -920,7 +916,6 @@ $(document).ready(function(){
 
 		var i = $(this).closest('a').attr('id');
 		var parent = $(this).closest('a');
-		console.log(i);
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
 		var remove_data = {csrfmiddlewaretoken:csrf_token, id:i};
 
@@ -933,7 +928,6 @@ $(document).ready(function(){
 			success : function(response){
 				parent.fadeOut('slow', function(){
 					parent.remove();
-					console.log("removed");
 				});
 			},
 		});
@@ -973,4 +967,9 @@ $(document).ready(function(){
 
 	});
 
+
+	editor.on('change', function(){
+		$("#save-code-profile").prop('disabled', false);
+		$("#save-code-profile").html("Save Code To Profile");
+	});
 });

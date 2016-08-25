@@ -19,7 +19,7 @@ RUN_URL = "https://api.hackerearth.com/v3/code/run/"
 # access config variable
 DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
 # DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
-CLIENT_SECRET = os.environ['HE_CLIENT_SECRET'] if not DEBUG else ""
+#CLIENT_SECRET = os.environ['HE_CLIENT_SECRET'] if not DEBUG else ""
 
 permitted_languages = ["C", "CPP", "CSHARP", "CLOJURE", "CSS", "HASKELL", "JAVA", "JAVASCRIPT", "OBJECTIVEC", "PERL", "PHP", "PYTHON", "R", "RUBY", "RUST", "SCALA"]
 
@@ -240,7 +240,6 @@ def register(request):
     msg = ""
     flag = False
 
-    print users
     for user in users:
       if username == user.username:
         error_username = "Username already exist"
@@ -249,16 +248,10 @@ def register(request):
         error_email = "Email already exist"
         flag = True
 
-    print error_username
-    print error_email
-
     if flag == False:
       new_user = Users.objects.create(username=username, email=email, password=password, code="")
       new_user.save()
       request.session['username'] = username
-
-      msg = "Succesfully Registered"
-      print msg
 
     r = {'msg':msg, 'error_username':error_username, 'error_email':error_email}
     return JsonResponse(r, safe=False)
@@ -282,7 +275,6 @@ def login(request):
           msg = "Successfully logged in"
           request.session['username'] = username
 
-      print msg
       r = {'msg':msg, 'username' : username}
       return JsonResponse(r, safe=False)
     
@@ -392,11 +384,8 @@ def savetoprofile(request):
 
       username = request.session['username']
       user = Users.objects.get(username = username)
-      print r['code_id']
       user.code = str(r['code_id']) + ',' + str(user.code)
       user.save()
-      print user
-      print "code" + user.code
 
       return JsonResponse(r, safe=False)
   else:
@@ -432,7 +421,6 @@ def removecode(request):
       
       for i in range(0, len(code_id)):
         if code_id[i] == str(request.POST['id']):
-          print "deleted" + code_id[i]
           code_id.pop(i)
           break
 
@@ -440,7 +428,6 @@ def removecode(request):
 
       user.code = code_id
       user.save()
-      print user
 
       r = {}
       return JsonResponse(r, safe=False)
