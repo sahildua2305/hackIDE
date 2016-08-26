@@ -30,7 +30,5 @@ class Users(Document):
     username = StringField(required=True)
     email = StringField(required=True)
     password = StringField(required=True)
-    code = StringField()
-
-    def __str__(self):
-        return self.username + "-" + self.email + "-" + str(self.code)
+    code = ListField()
+    title = ListField()

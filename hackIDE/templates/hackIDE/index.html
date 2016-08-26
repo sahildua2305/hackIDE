@@ -33,7 +33,7 @@
     <input type='hidden' id='run_status_memory' value={{run_status_memory}} />
     <input type='hidden' id='run_status_output' value={{run_status_output}} />
     <input type='hidden' id='run_status_stderr' value={{run_status_stderr}} />
-    <textarea id='copy_link' readonly></textarea>
+    <textarea style="position:absolute;" id='copy_link' readonly></textarea>
     <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
@@ -59,8 +59,8 @@
                                         <h2 id="msg_copied"></h2>
                                     </div>
                                     <div class="modal-body">
-                                        <div class="list-group" id="profile_saved_data">
-                                        </div>
+                                        <table class="table table-hover" id="data_table">
+                                        </table>
                                     </div>
                                     <div class="modal-footer">
                                     </div>
@@ -170,7 +170,7 @@
                         <a class="cursor no-select" id="show-settings">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                         </a>
-                        <div id="settings-pane">
+-                        <div id="settings-pane">
                             <div id="inner-settings-pane"></div>
                             <label>Editor Theme</label>
                             <select class="form-control" name="editor-theme" id="editor-theme">
@@ -203,7 +203,24 @@
                 <div class="pull-right run-save-panel">
                     <span id='copy_code'></span>
                     {% if 'username' in request.session %}
-                    <button class="btn btn-info" id="save-code-profile" data-toggle="tooltip" data-placement="top" >Save Code To Profile</button>
+                    <!--<button class="btn btn-info" id="save-code-profile" data-toggle="tooltip" data-placement="top" >Save Code To Profile</button>-->
+                    <button class="btn btn-info" id="save-code-profile" data-toggle='modal' data-target='#title-save-modal'>Save Code to Profile</button>
+                        <div id="title-save-modal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                            <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input class="form-control" id="code-title" type="text" placeholder="Title" name="title">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-info" id="title-save" type="button">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     {% endif %}
                     <button class="btn btn-info" id="compile-code" data-toggle="tooltip" data-placement="top" title="Press Shift+Enter">Compile it!</button>
                     <button class="btn btn-success" id="run-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+Enter">Hack(run) it!</button>
@@ -347,7 +364,6 @@
         </div>
     </noscript>
     <!-- End of StatCounter Code for Default Guide -->
-    <div id="new">Hello ia new</div>
 
 </body>
 

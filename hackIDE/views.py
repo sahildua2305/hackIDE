@@ -19,7 +19,7 @@ RUN_URL = "https://api.hackerearth.com/v3/code/run/"
 # access config variable
 DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
 # DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
-#CLIENT_SECRET = os.environ['HE_CLIENT_SECRET'] if not DEBUG else ""
+CLIENT_SECRET = os.environ['HE_CLIENT_SECRET'] if not DEBUG else ""
 
 permitted_languages = ["C", "CPP", "CSHARP", "CLOJURE", "CSS", "HASKELL", "JAVA", "JAVASCRIPT", "OBJECTIVEC", "PERL", "PHP", "PYTHON", "R", "RUBY", "RUST", "SCALA"]
 
@@ -249,7 +249,7 @@ def register(request):
         flag = True
 
     if flag == False:
-      new_user = Users.objects.create(username=username, email=email, password=password, code="")
+      new_user = Users.objects.create(username=username, email=email, password=password, code=[], title=[])
       new_user.save()
       request.session['username'] = username
 
@@ -384,7 +384,11 @@ def savetoprofile(request):
 
       username = request.session['username']
       user = Users.objects.get(username = username)
-      user.code = str(r['code_id']) + ',' + str(user.code)
+      user.code.insert(0, str(r['code_id']))
+
+      code_title = request.POST['code_title']
+      user.title.insert(0, code_title)
+
       user.save()
 
       return JsonResponse(r, safe=False)
@@ -398,9 +402,7 @@ def displayprofile(request):
       username = request.session['username']
       user = Users.objects.get(username=username)
       code_id = user.code
-      code_id = code_id.split(',')
-      code_id.pop()
-      r = {'code_id':code_id}
+      r = {'code_id':code_id, 'code_title':user.title}
 
       return JsonResponse(r, safe=False)
     
@@ -417,16 +419,13 @@ def removecode(request):
       username = request.session['username']
       user = Users.objects.get(username=username)
       code_id = user.code
-      code_id = code_id.split(',')
       
       for i in range(0, len(code_id)):
         if code_id[i] == str(request.POST['id']):
-          code_id.pop(i)
+          user.code.pop(i)
+          user.title.pop(i)
           break
 
-      code_id = ','.join(code_id)
-
-      user.code = code_id
       user.save()
 
       r = {}
@@ -436,3 +435,4 @@ def removecode(request):
 
   else:
     return HttpResponseForbidden()
+

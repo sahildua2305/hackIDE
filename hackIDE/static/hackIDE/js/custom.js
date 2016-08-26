@@ -812,14 +812,16 @@ $(document).ready(function(){
 		});
 	});
 
-	$("#save-code-profile").click(function(){
+	$("#title-save").click(function(){
 
 		// if a run request is ongoing
 		if(request_ongoing)
 			return;
 
 		$("#save-code-profile").html("Saving");
+		$("#title-save").html("Saving");
 		// disable button when this method is called
+		$("#title-save").prop('disabled', true);
 		$("#compile-code").prop('disabled', true);
 		$("#run-code").prop('disabled', true);
 		$("#save-code-profile").prop('disabled', true);
@@ -835,6 +837,7 @@ $(document).ready(function(){
 		}
 
 		var input_given = $("#custom-input").val();
+		var code_title = $('#code-title').val();
 
 		request_ongoing = true;
 
@@ -843,6 +846,7 @@ $(document).ready(function(){
 				source: editorContent,
 				lang: languageSelected,
 				input: input_given,
+				code_title: code_title,
 				csrfmiddlewaretoken: csrf_token
 			};
 			// AJAX request to Django for running code with input
@@ -858,8 +862,10 @@ $(document).ready(function(){
 					// enable button when this method is called
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
-					$("#save-code-profile").prop('disabled', false);
+					$("#save-code-profile").prop('disabled', true);
 					$("#save-code-profile").html("Saved");
+					$("#title-save").html("Saved");
+					$("#code-title").val("");
 
 				},
 				error: function(error){
@@ -877,6 +883,7 @@ $(document).ready(function(){
 			var run_data = {
 				source: editorContent,
 				lang: languageSelected,
+				code_title: code_title,
 				csrfmiddlewaretoken: csrf_token
 			};
 			// AJAX request to Django for running code without input\
@@ -894,9 +901,11 @@ $(document).ready(function(){
 					// enable button when this method is called
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
-					$("#save-code-profile").prop('disabled', false);
 					$("#save-code-profile").prop('disabled', true);
 					$("#save-code-profile").html("Saved");
+
+					$("#title-save").html("Saved");
+					$("#code-title").val("");
 				},
 				error: function(error){
 
@@ -912,10 +921,10 @@ $(document).ready(function(){
 
 	});
 
-	$("#profile_saved_data").on('click', '#close_data', function(){
+	$("#data_table").on('click', '#close_data', function(){
 
-		var i = $(this).closest('a').attr('id');
-		var parent = $(this).closest('a');
+		var i = $(this).closest('tr').attr('id');
+		var parent = $(this).closest('tr');
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
 		var remove_data = {csrfmiddlewaretoken:csrf_token, id:i};
 
@@ -944,13 +953,13 @@ $(document).ready(function(){
 			dataType: "json",
 			timeout: 10000,
 			success : function(response){
-				$("#profile_saved_data").html("");
+				$("#data_table").html("<tr><th>Code Id</th><th>Title</th><th></th></tr>");
 				if(location.port == "")
-				{	
+				{
 					for(var i=0;i<response.code_id.length;i++)
 					{	
 						var link = window.location.hostname + "/code_id=" + response.id[i] + "/";
-						$("#profile_saved_data").append("<a class='list-group-item links' href='" + link+ "' id='" + response.code_id[i] + "'>"+response.code_id[i]+" <button type='button' id='close_data' class='close'><span>&times;</span></button></a>");
+						$("#data_table").append("<tr id='"+ response.code_id[i] +"'><td>"+response.code_id[i]+"</td><td>"+ response.code_title[i] +"</td><td><a href='"+ link +"' class='btn btn-success'>Open</a><button type='button'  id='close_data' class='close'><span id='close_data'>&times;</span></button></td></tr>");
 					}
 				}
 				else
@@ -958,7 +967,7 @@ $(document).ready(function(){
 					for(var i=0;i<response.code_id.length;i++)
 					{
 						var link = window.location.hostname + ":" + location.port +"/code_id=" + response.code_id[i] + "/";
-						$("#profile_saved_data").append("<a class='list-group-item links' href='"+ link + "' id='" + response.code_id[i] + "'>"+response.code_id[i]+"<button type='button'  id='close_data' class='close'><span id='close_data'>&times;</span></button></a>");
+						$("#data_table").append("<tr id='"+ response.code_id[i] +"'><td>"+response.code_id[i]+"</td><td>"+ response.code_title[i] +"</td><td><a href='"+ link +"' class='btn btn-success'>Open</a><button type='button'  id='close_data' class='close'><span id='close_data'>&times;</span></button></td></tr>");
 					}
 				}
 			},
@@ -969,6 +978,9 @@ $(document).ready(function(){
 
 
 	editor.on('change', function(){
+		$("#title-save").prop('disabled', false);
+		$("#title-save").html("Save");
+
 		$("#save-code-profile").prop('disabled', false);
 		$("#save-code-profile").html("Save Code To Profile");
 	});
