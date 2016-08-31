@@ -84,14 +84,16 @@
                                     {% csrf_token %}
                                         <div class="form-group">
                                             <input type="text" class="form-control" name="username" placeholder="Username" id="login_username">
+                                            <div style="color:red;" id="login_error_username"></div>
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control" name="password" placeholder="Password" id="login_password">
+                                            <div style="color:red;" id="login_error_username"></div>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <div id="login_msg"></div>
+                                    <span style="color:red;" id="login_msg"></span><span>&nbsp;</span>
                                     <button type="button" id="login" class="btn btn-default">Login</button>
                                 </div>
                             </div>
@@ -113,14 +115,15 @@
                                         {% csrf_token %}
                                         <div class="form-group">
                                             <input type="text" class="form-control" name="signup_username" placeholder="Username" id="signup_username">
-                                            <div id="error_username"></div>
+                                            <div style="color:red;" id="error_username"></div>
                                         </div>
                                         <div class="form-group">
                                             <input type="email" class="form-control" name="signup_email" placeholder="Email" id="signup_email">
-                                            <div id="error_email"></div>
+                                            <div style="color:red;" id="error_email"></div>
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control" name="signup_password" placeholder="Password" id="signup_password">
+                                            <div style="color:red;" id="error_password"></div>
                                         </div>
                                     </form>
                                 </div>
@@ -216,6 +219,7 @@
                                         <input class="form-control" id="code-title" type="text" placeholder="Title" name="title">
                                     </div>
                                     <div class="modal-footer">
+                                        <span style="color:red;" id="error_save_title"></span><span>&nbsp;</span>
                                         <button class="btn btn-info" id="title-save" type="button">Save</button>
                                     </div>
                                 </div>

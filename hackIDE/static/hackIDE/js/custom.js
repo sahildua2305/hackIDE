@@ -755,6 +755,9 @@ $(document).ready(function(){
 		var username = $('#signup_username').val();
 		var email = $("#signup_email").val();
 		var password = $("#signup_password").val();
+
+		$("#register").html("Registering");
+		$("#register").prop('disabled', true);
 		
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
 		var form_data = {username : username, email : email, password : password, csrfmiddlewaretoken : csrf_token};
@@ -767,8 +770,17 @@ $(document).ready(function(){
 			success : function(response){
 				$("#error_username").html(response.error_username);
 				$("#error_email").html(response.error_email);
+				$("#error_password").html(response.error_password);
+
+				$("#register").prop('disabled', false);
+				$("#register").html("Register");
+
 				$("#msg").html(response.msg);
-				location.reload();
+				if (response.error_username == "" && response.error_email == "" && response.error_password == "")
+				{
+					$("#register").html("Registered");
+					location.reload();
+				}
 			},
 		});
 	});
@@ -777,6 +789,8 @@ $(document).ready(function(){
 		var username = $('#login_username').val();
 		var password = $("#login_password").val();
 
+		$("#login").html("Logging In");
+		$("#login").prop("disabled", true);
 		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
 
 		var login_form_data = {username : username, password : password, csrfmiddlewaretoken : csrf_token};
@@ -789,9 +803,16 @@ $(document).ready(function(){
 			timeout : 10000,
 			success : function(response){
 
+				$("#login").prop("disabled", false);
+				$("#login").html("Login");
+
 				$('#login_msg').html(response.msg);
 				if(response.msg != "Invalid credentials")
+				{
+					$("#login").html("Logged In Sucessfully");
 					location.reload();
+				}
+
 			},
 		});
 	});
@@ -818,6 +839,7 @@ $(document).ready(function(){
 		if(request_ongoing)
 			return;
 
+		$("#error_save_title").html("");
 		$("#save-code-profile").html("Saving");
 		$("#title-save").html("Saving");
 		// disable button when this method is called
@@ -858,15 +880,26 @@ $(document).ready(function(){
 				timeout: 10000,
 				success: function(response){
 					request_ongoing = false;
-					$("#save-code-profile").html("Save Code To Profile");
-					// enable button when this method is called
-					$("#compile-code").prop('disabled', false);
-					$("#run-code").prop('disabled', false);
-					$("#save-code-profile").prop('disabled', true);
-					$("#save-code-profile").html("Saved");
-					$("#title-save").html("Saved");
-					$("#code-title").val("");
-
+					if ("error_save_title" in response){
+						$("#error_save_title").html(response.error_save_title);
+						$("#title-save").html("Save");
+						$("#save-code-profile").html("Save Code To Profile");
+						$("#compile-code").prop('disabled', false);
+						$("#run-code").prop('disabled', false);
+						$("#title-save").prop("disabled", false);
+						$("#save-code-profile").prop("disabled", false);
+					}
+					else
+					{	
+						$("#save-code-profile").html("Save Code To Profile");
+						// enable button when this method is called
+						$("#compile-code").prop('disabled', false);
+						$("#run-code").prop('disabled', false);
+						$("#save-code-profile").prop('disabled', true);
+						$("#save-code-profile").html("Saved");
+						$("#title-save").html("Saved");
+						$("#code-title").val("");
+					}
 				},
 				error: function(error){
 
@@ -895,17 +928,29 @@ $(document).ready(function(){
 				dataType: "json",
 				timeout: timeout_ms,
 				success: function(response){
-					
 					request_ongoing = false;
-					$("#save-code-profile").html("Save Code To Profile");
-					// enable button when this method is called
-					$("#compile-code").prop('disabled', false);
-					$("#run-code").prop('disabled', false);
-					$("#save-code-profile").prop('disabled', true);
-					$("#save-code-profile").html("Saved");
+					if ("error_save_title" in response){
+						$("#error_save_title").html(response.error_save_title);
+						$("#title-save").html("Save");
+						$("#save-code-profile").html("Save Code To Profile");
+						$("#compile-code").prop('disabled', false);
+						$("#run-code").prop('disabled', false);
+						$("#title-save").prop("disabled", false);
+						$("#save-code-profile").prop("disabled", false);
+					}
+					else
+					{
 
-					$("#title-save").html("Saved");
-					$("#code-title").val("");
+						$("#save-code-profile").html("Save Code To Profile");
+						// enable button when this method is called
+						$("#compile-code").prop('disabled', false);
+						$("#run-code").prop('disabled', false);
+						$("#save-code-profile").prop('disabled', true);
+						$("#save-code-profile").html("Saved");
+
+						$("#title-save").html("Saved");
+						$("#code-title").val("");
+					}
 				},
 				error: function(error){
 

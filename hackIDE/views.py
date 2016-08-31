@@ -10,6 +10,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseForbidden
 from models import codes, Users
 from passlib.hash import sha256_crypt
+import re
 
 import requests, json, os
 
@@ -232,13 +233,25 @@ def register(request):
   if request.is_ajax():
     username = request.POST['username']
     email = request.POST['email']
-    password = sha256_crypt.encrypt(str(request.POST['password']))
-    users = Users.objects()
-
     error_username = ""
     error_email = ""
-    msg = ""
+    error_password = ""
     flag = False
+
+    if len(username) < 8:
+      error_username = "Username should be atleast 8 characters."
+      flag = True
+    if len(request.POST['password'])< 8:
+      error_password = "Password should be atleast 8 characters."
+      flag = True
+    if not re.search('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email):
+      print "email invalid"
+      flag = True
+
+
+    password = sha256_crypt.encrypt(str(request.POST['password']))
+    users = Users.objects()
+    msg = ""
 
     for user in users:
       if username == user.username:
@@ -253,7 +266,7 @@ def register(request):
       new_user.save()
       request.session['username'] = username
 
-    r = {'msg':msg, 'error_username':error_username, 'error_email':error_email}
+    r = {'msg':msg, 'error_username':error_username, 'error_email':error_email, 'error_password':error_password}
     return JsonResponse(r, safe=False)
 
   else:
@@ -297,101 +310,105 @@ def logout(request):
 
 def savetoprofile(request):
   if request.is_ajax():
-    try:
-      source = request.POST['source']
-      # Handle Empty Source Case
-      source_empty_check(source)
+    if len(request.POST['code_title'])>0:
+      try:
+        source = request.POST['source']
+        # Handle Empty Source Case
+        source_empty_check(source)
 
-      lang = request.POST['lang']
-      # Handle Invalid Language Case
-      lang_valid_check(lang)
+        lang = request.POST['lang']
+        # Handle Invalid Language Case
+        lang_valid_check(lang)
 
-    except KeyError:
-      # Handle case when at least one of the keys (lang or source) is absent
-      missing_argument_error()
+      except KeyError:
+        # Handle case when at least one of the keys (lang or source) is absent
+        missing_argument_error()
 
+      else:
+        # default value of 5 sec, if not set
+        time_limit = request.POST.get('time_limit', 5)
+        # default value of 262144KB (256MB), if not set
+        memory_limit = request.POST.get('memory_limit', 262144)
+
+        run_data = {
+          'client_secret': CLIENT_SECRET,
+          'async': 0,
+          'source': source,
+          'lang': lang,
+          'time_limit': time_limit,
+          'memory_limit': memory_limit,
+        }
+
+        # if input is present in the request
+        code_input = ""
+        if 'input' in request.POST:
+          run_data['input'] = request.POST['input']
+          code_input = run_data['input']
+
+        """
+        Make call to /run/ endpoint of HackerEarth API
+        and save code and result in database
+        """
+        r = requests.post(RUN_URL, data=run_data)
+        r = r.json()
+        cs = ""
+        rss = ""
+        rst = ""
+        rsm = ""
+        rso = ""
+        rsstdr = ""
+        try:
+          cs = r['compile_status']
+        except:
+          pass
+        try:
+          rss=r['run_status']['status']
+        except:
+          pass
+        try:
+          rst = r['run_status']['time_used']
+        except:
+          pass
+        try:
+          rsm = r['run_status']['memory_used']
+        except:
+          pass
+        try:
+          rso = r['run_status']['output_html']
+        except:
+          pass
+        try:
+          rsstdr = r['run_status']['stderr']
+        except:
+          pass
+
+        code_response = codes.objects.create(
+          code_id = r['code_id'],
+          code_content = source,
+          lang = lang,
+          code_input = code_input,
+          compile_status = cs,
+          run_status_status = rss,
+          run_status_time = rst,
+          run_status_memory = rsm,
+          run_status_output = rso,
+          run_status_stderr = rsstdr
+        )
+        code_response.save()
+
+        username = request.session['username']
+        user = Users.objects.get(username = username)
+        user.code.insert(0, str(r['code_id']))
+
+        code_title = request.POST['code_title']
+        user.title.insert(0, code_title)
+
+        user.save()
+
+        return JsonResponse(r, safe=False)
+      
     else:
-      # default value of 5 sec, if not set
-      time_limit = request.POST.get('time_limit', 5)
-      # default value of 262144KB (256MB), if not set
-      memory_limit = request.POST.get('memory_limit', 262144)
-
-      run_data = {
-        'client_secret': CLIENT_SECRET,
-        'async': 0,
-        'source': source,
-        'lang': lang,
-        'time_limit': time_limit,
-        'memory_limit': memory_limit,
-      }
-
-      # if input is present in the request
-      code_input = ""
-      if 'input' in request.POST:
-        run_data['input'] = request.POST['input']
-        code_input = run_data['input']
-
-      """
-      Make call to /run/ endpoint of HackerEarth API
-      and save code and result in database
-      """
-      r = requests.post(RUN_URL, data=run_data)
-      r = r.json()
-      cs = ""
-      rss = ""
-      rst = ""
-      rsm = ""
-      rso = ""
-      rsstdr = ""
-      try:
-        cs = r['compile_status']
-      except:
-        pass
-      try:
-        rss=r['run_status']['status']
-      except:
-        pass
-      try:
-        rst = r['run_status']['time_used']
-      except:
-        pass
-      try:
-        rsm = r['run_status']['memory_used']
-      except:
-        pass
-      try:
-        rso = r['run_status']['output_html']
-      except:
-        pass
-      try:
-        rsstdr = r['run_status']['stderr']
-      except:
-        pass
-
-      code_response = codes.objects.create(
-        code_id = r['code_id'],
-        code_content = source,
-        lang = lang,
-        code_input = code_input,
-        compile_status = cs,
-        run_status_status = rss,
-        run_status_time = rst,
-        run_status_memory = rsm,
-        run_status_output = rso,
-        run_status_stderr = rsstdr
-      )
-      code_response.save()
-
-      username = request.session['username']
-      user = Users.objects.get(username = username)
-      user.code.insert(0, str(r['code_id']))
-
-      code_title = request.POST['code_title']
-      user.title.insert(0, code_title)
-
-      user.save()
-
-      return JsonResponse(r, safe=False)
+      return JsonResponse({'error_save_title' : "Field cannot be Empty"}, safe=False)
   else:
     return HttpResponseForbidden()
 
