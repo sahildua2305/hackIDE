@@ -411,6 +411,17 @@ $(document).ready(function(){
 							$(".error-message").html(response.run_status.stderr);
 						}
 					}
+					// To handle case when hackerearth api doesn't return a valid response.
+					else if( response == null || "Error code: 1200" in response.compile_status){
+						$(".output-io").show();
+						$(".output-io-info").hide();
+						$(".compile-status").children(".value").html("--");
+						$(".run-status").children(".value").html("--");
+						$(".time-sec").children(".value").html("--");
+						$(".memory-kb").children(".value").html("--");
+						$(".error-key").html("API error");
+						$(".error-message").html("Oops! HackerEarth API seems to be down for the moment!");
+					}
 					else{
 						$(".output-io").show();
 						$(".output-io-info").hide();
