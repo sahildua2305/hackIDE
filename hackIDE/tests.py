@@ -11,23 +11,24 @@ from django.core.urlresolvers import reverse
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By # for classes
+
 import os
 from time import sleep
 
 # URL-related constants
 BASE_URL = 'localhost:8000'
 
-# List of important elements' ids and classes.
+# List of important elements' ids and classes
 MAIN_TEXT_AREA_CLASS_NAME = 'ace_text-input'
 COMPILE_BUTTON_ID = 'compile-code'
 RUN_BUTTON_ID = 'run-code'
 CUSTOM_INPUT_ID = 'custom-input'
 CUSTOM_INPUT_CHECKBOX_ID = 'custom-input-checkbox'
 
-# List of important messages.
+# List of important messages
 COMPILE_SUCCESS = 'OK'
 COMPILE_FAILURE = '--'
+
 
 class IndexViewTests(TestCase):
 
@@ -177,4 +178,5 @@ class TestSavedCode(LiveServerTestCase):
     run_btn = selenium.find_element_by_id(RUN_BUTTON_ID)
     run_btn.send_keys(Keys.RETURN)
     sleep(3)
+    
     assert code_text in selenium.page_source
