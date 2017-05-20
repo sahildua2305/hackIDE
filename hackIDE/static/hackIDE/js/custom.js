@@ -146,6 +146,27 @@ $(document).ready(function(){
 	});
 
 	/**
+	* function to get filename by language given
+	*
+	*/
+	function getFileNameByLang(lang){
+		var filename = "code";
+		switch (lang) {
+			case "JAVA":
+				var content = editorContent;
+				var re = /public\sclass\s(.*)[.\n\r]*{/;
+				try {
+					filename = re.exec(content)[1];
+					filename = filename.replace(/(\r\n\s|\n|\r|\s)*/gm,"");
+				} catch (e) {}
+				break;
+			default:
+				break;
+		}
+		return filename;
+	}
+
+	/**
 	 * function to update editorContent with current content of editor
 	 *
 	 */
@@ -269,7 +290,13 @@ $(document).ready(function(){
 						$(".output-io-info").hide();
 						$(".compile-status").children(".value").html("--");
 						$(".error-key").html("Compile error");
-						$(".error-message").html(response.compile_status);
+
+						var compileMsgResponse = response.compile_status;
+						if (response.compile_status == "" || response.compile_status.length <= 1) {
+							compileMsgResponse = "An error ocurred while compiling your code or your code is not correct";
+						}
+
+						$(".error-message").html(compileMsgResponse);
 					}
 				}
 				else{
@@ -600,7 +627,9 @@ $(document).ready(function(){
 
 		// TODO: implement download code feature
 		updateContent();
-		downloadFile("code", editorContent, $("#lang").val());
+
+		var fileName = getFileNameByLang($("#lang").val());
+		downloadFile(fileName, editorContent, $("#lang").val());
 
 	});
 
