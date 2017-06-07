@@ -146,6 +146,27 @@ $(document).ready(function(){
 	});
 
 	/**
+	* function to get filename by language given
+	*
+	*/
+	function getFileNameByLang(lang){
+		var filename = "code";
+		switch (lang) {
+			case "JAVA":
+				var content = editorContent;
+				var re = /public\sclass\s(.*)[.\n\r]*{/;
+				try {
+					filename = re.exec(content)[1];
+					filename = filename.replace(/(\r\n\s|\n|\r|\s)*/gm,"");
+				} catch (e) {}
+				break;
+			default:
+				break;
+		}
+		return filename;
+	}
+
+	/**
 	 * function to update editorContent with current content of editor
 	 *
 	 */
@@ -600,7 +621,9 @@ $(document).ready(function(){
 
 		// TODO: implement download code feature
 		updateContent();
-		downloadFile("code", editorContent, $("#lang").val());
+
+		var fileName = getFileNameByLang($("#lang").val());
+		downloadFile(fileName, editorContent, $("#lang").val());
 
 	});
 
