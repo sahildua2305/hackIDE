@@ -269,10 +269,10 @@ $(document).ready(function(){
 						$(".output-io-info").hide();
 						$(".compile-status").children(".value").html("--");
 						$(".error-key").html("Compile error");
-						
+
 						var compileMsgResponse = response.compile_status;
 						if (response.compile_status == "" || response.compile_status.length <= 1) {
-							compileMsgResponse = "An error ocurred while compiling your code or your code is not correct";
+							compileMsgResponse = "Empty Compile Response. Something went wrong while compiling";
 						}
 
 						$(".error-message").html(compileMsgResponse);
