@@ -272,7 +272,7 @@ $(document).ready(function(){
 
 						var compileMsgResponse = response.compile_status;
 						if (response.compile_status == "" || response.compile_status.length <= 1) {
-							compileMsgResponse = "Empty Compile Response. Something went wrong while compiling";
+							compileMsgResponse = "Empty Compile Response. Something went wrong while compiling.";
 						}
 
 						$(".error-message").html(compileMsgResponse);
