@@ -210,7 +210,17 @@ $(document).ready(function(){
 		var zip = new JSZip()
 		zip.file(filename+"."+ext, text)
 		var downloaded = zip.generate({type : "blob"})
-		saveAs(downloaded, "test.zip")
+
+		var user_filename_choice = prompt("Enter a filename for the .zip", filename)
+		user_filename_choice = user_filename_choice.replace(/\s/g, '')
+		var final_filename_choice
+		if (user_filename_choice == null || user_filename_choice == ""){
+			final_filename_choice = "default.zip"
+		} else {
+			final_filename_choice = user_filename_choice + ".zip"
+		}
+
+		saveAs(downloaded, final_filename_choice)
 
 	}
 
