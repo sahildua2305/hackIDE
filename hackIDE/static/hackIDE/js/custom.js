@@ -208,9 +208,15 @@ $(document).ready(function(){
 		var ext = translateLangToExt(lang);
 
 		var zip = new JSZip()
-		zip.file(filename+"."+ext, text)
-		var downloaded = zip.generate({type : "blob"})
-		saveAs(downloaded, "test.zip")
+		zip.file(filename+.+ext, text)
+		var downloaded = zip.generate({type : blob})
+
+		var user_filename_choice = prompt(Enter a filename for the .zip, filename)
+		if (user_filename_choice == null || user_filename_choice ==  || user_filename_choice ==  ){
+		saveAs(downloaded, default.zip)
+		} else {
+		saveAs(downloaded, user_filename_choice+.zip)
+		}
 
 	}
 
