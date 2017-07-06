@@ -212,11 +212,15 @@ $(document).ready(function(){
 		var downloaded = zip.generate({type : "blob"})
 
 		var user_filename_choice = prompt("Enter a filename for the .zip", filename)
-		if (user_filename_choice == null || user_filename_choice == "" || user_filename_choice == " " ){
-		saveAs(downloaded, "default.zip")
+		user_filename_choice = user_filename_choice.replace(/\s/g, '')
+		var final_filename_choice
+		if (user_filename_choice == null || user_filename_choice == ""){
+			final_filename_choice = "default.zip"
 		} else {
-		saveAs(downloaded, user_filename_choice+".zip")
+			final_filename_choice = user_filename_choice + ".zip"
 		}
+
+		saveAs(downloaded, final_filename_choice)
 
 	}
 
