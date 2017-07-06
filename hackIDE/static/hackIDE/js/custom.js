@@ -349,24 +349,46 @@ $(document).ready(function(){
 
 	}
 
-
 	/**
-	 * function to send AJAX request to 'run/' endpoint
+	 * function to send AJAX request to 'run/' and 'savetoprofile/' endpoint
 	 *
 	 */
-	function runCode(){
+
+	 //check = 1 for running the code
+	 // check = 0 for saving code to profile
+
+	function test(check){
 
 		// if a run request is ongoing
 		if(request_ongoing)
 			return;
 
-		// hide previous compile/output results
-		$(".output-response-box").hide();
+		if(check == 1)
+		{
+			// hide previous compile/output results
+			$(".output-response-box").hide();
 
-		// Change button text when this method is called
-		$("#run-code").html("Running..");
+			// Change button text when this method is called
+			$("#run-code").html("Running..");
 
-		// disable button when this method is called
+			RUN_URL = "run/";
+		}
+
+
+		if(check == 0)
+		{
+			$("#error_save_title").html("");
+			$("#save-code-profile").html("Saving");
+			$("#title-save").html("Saving");
+			// disable button when this method is called
+			$("#title-save").prop('disabled', true);
+			$("#save-code-profile").prop('disabled', true);
+
+			var code_title = $('#code-title').val();
+			RUN_URL = "savetoprofile/";
+
+		}
+
 		$("#compile-code").prop('disabled', true);
 		$("#run-code").prop('disabled', true);
 
@@ -391,6 +413,11 @@ $(document).ready(function(){
 				input: input_given,
 				csrfmiddlewaretoken: csrf_token
 			};
+
+			if(check == 0)
+			{
+				run_data.code_title = code_title;				
+			}
 			// AJAX request to Django for running code with input
 			$.ajax({
 				url: RUN_URL,
@@ -400,75 +427,106 @@ $(document).ready(function(){
 				timeout: 10000,
 				success: function(response){
 					request_ongoing = false;
-
-					if(location.port == "")
-						$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
-					else
-						$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + ':' +  location.port +'/code_id=' + response.code_id + '/</kbd>';
-
-					$('#copy_code').css({'display': 'initial'});
-
-					// Change button text when this method is called
-					$("#run-code").html("Hack(run) it!");
-
-					// enable button when this method is called
+					
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
 
-					$("html, body").delay(500).animate({
-						scrollTop: $('#show-results').offset().top
-					}, 1000);
+					
+					if(check == 0)
+					{
+						if ("error_save_title" in response){
+							$("#error_save_title").html(response.error_save_title);
+							$("#title-save").html("Save");
+							$("#save-code-profile").html("Save Code To Profile");
+							$("#title-save").prop("disabled", false);
+							$("#save-code-profile").prop("disabled", false);
+						}
+						else
+						{	
+							$("#save-code-profile").html("Save Code To Profile");
+							$("#save-code-profile").prop('disabled', true);
+							$("#save-code-profile").html("Saved");
+							$("#title-save").html("Saved");
+							$("#code-title").val("");
+							$("#title-save-modal").modal("toggle");
+						}
+					}
 
-					$(".output-response-box").show();
-					$(".run-status").show();
-					$(".time-sec").show();
-					$(".memory-kb").show();
+					else if(check == 1)
+					{
+						if(location.port == "")
+							$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
+						else
+							$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + ':' +  location.port +'/code_id=' + response.code_id + '/</kbd>';
 
-					if(response.compile_status == "OK"){
-						if(response.run_status.status == "AC"){
-							$(".output-io").show();
-							$(".output-error-box").hide();
-							$(".output-io-info").show();
-							$(".compile-status").children(".value").html(response.compile_status);
-							$(".run-status").children(".value").html(response.run_status.status);
-							$(".time-sec").children(".value").html(response.run_status.time_used);
-							$(".memory-kb").children(".value").html(response.run_status.memory_used);
-							$(".output-o").html(response.run_status.output_html);
-							$(".output-i").html(input_given);
+						$('#copy_code').css({'display': 'initial'});
+
+						// Change button text when this method is called
+						$("#run-code").html("Hack(run) it!");
+
+						// enable button when this method is called
+						$("html, body").delay(500).animate({
+							scrollTop: $('#show-results').offset().top
+						}, 1000);
+
+						$(".output-response-box").show();
+						$(".run-status").show();
+						$(".time-sec").show();
+						$(".memory-kb").show();
+
+						if(response.compile_status == "OK"){
+							if(response.run_status.status == "AC"){
+								$(".output-io").show();
+								$(".output-error-box").hide();
+								$(".output-io-info").show();
+								$(".compile-status").children(".value").html(response.compile_status);
+								$(".run-status").children(".value").html(response.run_status.status);
+								$(".time-sec").children(".value").html(response.run_status.time_used);
+								$(".memory-kb").children(".value").html(response.run_status.memory_used);
+								$(".output-o").html(response.run_status.output_html);
+								$(".output-i").html(input_given);
+							}
+							else{
+								$(".output-io").show();
+								$(".output-io-info").hide();
+								$(".output-error-box").show();
+								$(".compile-status").children(".value").html(response.compile_status);
+								$(".run-status").children(".value").html(response.run_status.status);
+								$(".time-sec").children(".value").html(response.run_status.time_used);
+								$(".memory-kb").children(".value").html(response.run_status.memory_used);
+								$(".error-key").html("Run-time error (stderr)");
+								$(".error-message").html(response.run_status.stderr);
+							}
 						}
 						else{
 							$(".output-io").show();
 							$(".output-io-info").hide();
-							$(".output-error-box").show();
-							$(".compile-status").children(".value").html(response.compile_status);
-							$(".run-status").children(".value").html(response.run_status.status);
-							$(".time-sec").children(".value").html(response.run_status.time_used);
-							$(".memory-kb").children(".value").html(response.run_status.memory_used);
-							$(".error-key").html("Run-time error (stderr)");
-							$(".error-message").html(response.run_status.stderr);
+							$(".compile-status").children(".value").html("--");
+							$(".run-status").children(".value").html("CE");
+							$(".time-sec").children(".value").html("0.0");
+							$(".memory-kb").children(".value").html("0");
+							$(".error-key").html("Compile error");
+							$(".error-message").html(response.compile_status);
 						}
-					}
-					else{
-						$(".output-io").show();
-						$(".output-io-info").hide();
-						$(".compile-status").children(".value").html("--");
-						$(".run-status").children(".value").html("CE");
-						$(".time-sec").children(".value").html("0.0");
-						$(".memory-kb").children(".value").html("0");
-						$(".error-key").html("Compile error");
-						$(".error-message").html(response.compile_status);
 					}
 				},
 				error: function(error){
 
 					request_ongoing = false;
-
-					// Change button text when this method is called
-					$("#run-code").html("Hack(run) it!");
-
-					// enable button when this method is called
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
+
+					if(check == 0)
+					{
+						$("#save-code-profile").html("Save Code To Profile");
+						// enable button when this method is called
+						$("#save-code-profile").prop('disabled', false);
+					}
+
+					else if(check == 1)
+					{
+						// Change button text when this method is called
+					$("#run-code").html("Hack(run) it!");
 
 					$("html, body").delay(500).animate({
 						scrollTop: $('#show-results').offset().top
@@ -487,6 +545,7 @@ $(document).ready(function(){
 					$(".memory-kb").children(".value").html("0");
 					$(".error-key").html("Server error");
 					$(".error-message").html("Server couldn't complete request. Please try again!");
+					}
 				}
 			});
 		}
@@ -496,6 +555,14 @@ $(document).ready(function(){
 				lang: languageSelected,
 				csrfmiddlewaretoken: csrf_token
 			};
+
+			RUN_URL = "run/"
+
+			if(check == 0)
+			{
+				run_data.code_title = code_title;
+				RUN_URL = "savetoprofile/";				
+			}
 			// AJAX request to Django for running code without input\
 			var timeout_ms = 10000;
 			$.ajax({
@@ -505,112 +572,152 @@ $(document).ready(function(){
 				dataType: "json",
 				timeout: timeout_ms,
 				success: function(response){
-					if(location.port == "")
-						$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
-					else
-						$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + ':' +  location.port +'/code_id=' + response.code_id + '/</kbd>';
-
-					$('#copy_code').css({'display': 'initial'});
-
 					request_ongoing = false;
-
-					// Change button text when this method is called
-					$("#run-code").html("Hack(run) it!");
-
-					// enable button when this method is called
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
 
-					$("html, body").delay(500).animate({
-						scrollTop: $('#show-results').offset().top
-					}, 1000);
+					if(check == 0)
+					{
+						if ("error_save_title" in response){
+							$("#error_save_title").html(response.error_save_title);
+							$("#title-save").html("Save");
+							$("#save-code-profile").html("Save Code To Profile");
+							
+							$("#title-save").prop("disabled", false);
+							$("#save-code-profile").prop("disabled", false);
+						}
+						else
+						{
 
-					$(".output-response-box").show();
-					$(".run-status").show();
-					$(".time-sec").show();
-					$(".memory-kb").show();
+							$("#save-code-profile").html("Save Code To Profile");
+							$("#save-code-profile").prop('disabled', true);
+							$("#save-code-profile").html("Saved");
 
-					if(response.compile_status == "OK"){
-						if(response.run_status.status == "AC"){
-							$(".output-io").show();
-							$(".output-error-box").hide();
-							$(".output-io-info").show();
-							$(".output-i-info").hide();
-							$(".compile-status").children(".value").html(response.compile_status);
-							$(".run-status").children(".value").html(response.run_status.status);
-							$(".time-sec").children(".value").html(response.run_status.time_used);
-							$(".memory-kb").children(".value").html(response.run_status.memory_used);
-							$(".output-o").html(response.run_status.output_html);
+							$("#title-save").html("Saved");
+							$("#code-title").val("");
+
+							$("#title-save-modal").modal("toggle");
+						}
+					}
+
+					else if(check == 1)
+					{
+					
+						if(location.port == "")
+							$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + '/code_id=' + response.code_id + '/</kbd>';
+						else
+							$('#copy_code')[0].innerHTML = '<kbd>' + window.location.hostname + ':' +  location.port +'/code_id=' + response.code_id + '/</kbd>';
+
+						$('#copy_code').css({'display': 'initial'});
+
+						// Change button text when this method is called
+						$("#run-code").html("Hack(run) it!");
+
+						$("html, body").delay(500).animate({
+							scrollTop: $('#show-results').offset().top
+						}, 1000);
+
+						$(".output-response-box").show();
+						$(".run-status").show();
+						$(".time-sec").show();
+						$(".memory-kb").show();
+
+						if(response.compile_status == "OK"){
+							if(response.run_status.status == "AC"){
+								$(".output-io").show();
+								$(".output-error-box").hide();
+								$(".output-io-info").show();
+								$(".output-i-info").hide();
+								$(".compile-status").children(".value").html(response.compile_status);
+								$(".run-status").children(".value").html(response.run_status.status);
+								$(".time-sec").children(".value").html(response.run_status.time_used);
+								$(".memory-kb").children(".value").html(response.run_status.memory_used);
+								$(".output-o").html(response.run_status.output_html);
+							}
+							else{
+								$(".output-io").show();
+								$(".output-io-info").hide();
+								$(".output-error-box").show();
+								$(".compile-status").children(".value").html(response.compile_status);
+								$(".run-status").children(".value").html(response.run_status.status);
+								$(".time-sec").children(".value").html(response.run_status.time_used);
+								$(".memory-kb").children(".value").html(response.run_status.memory_used);
+
+								if (response.run_status.status == "TLE"){
+									// Timeout error
+									$(".error-key").html("Timeout error");
+									$(".error-message").html("Time limit exceeded.");
+								} else if(response.run_status.status == "MLE"){
+									// Memory Limit Exceeded
+									$(".error-key").html("Memory limit error");
+									$(".error-message").html("Memory limit exceeded");
+								}
+								else {
+									// General stack error
+									$(".error-key").html("Run-time error (stderr)");
+									$(".error-message").html(response.run_status.stderr);
+								}
+							}
 						}
 						else{
 							$(".output-io").show();
 							$(".output-io-info").hide();
-							$(".output-error-box").show();
-							$(".compile-status").children(".value").html(response.compile_status);
-							$(".run-status").children(".value").html(response.run_status.status);
-							$(".time-sec").children(".value").html(response.run_status.time_used);
-							$(".memory-kb").children(".value").html(response.run_status.memory_used);
-
-							if (response.run_status.status == "TLE"){
-								// Timeout error
-								$(".error-key").html("Timeout error");
-								$(".error-message").html("Time limit exceeded.");
-							} else if(response.run_status.status == "MLE"){
-								// Memory Limit Exceeded
-								$(".error-key").html("Memory limit error");
-								$(".error-message").html("Memory limit exceeded");
-							}
-							else {
-								// General stack error
-								$(".error-key").html("Run-time error (stderr)");
-								$(".error-message").html(response.run_status.stderr);
-							}
+							$(".compile-status").children(".value").html("--");
+							$(".run-status").children(".value").html("CE");
+							$(".time-sec").children(".value").html("0.0");
+							$(".memory-kb").children(".value").html("0");
+							$(".error-key").html("Compile error");
+							$(".error-message").html(response.compile_status);
 						}
-					}
-					else{
-						$(".output-io").show();
-						$(".output-io-info").hide();
-						$(".compile-status").children(".value").html("--");
-						$(".run-status").children(".value").html("CE");
-						$(".time-sec").children(".value").html("0.0");
-						$(".memory-kb").children(".value").html("0");
-						$(".error-key").html("Compile error");
-						$(".error-message").html(response.compile_status);
 					}
 				},
 				error: function(error){
 
 					request_ongoing = false;
-
-					// Change button text when this method is called
-					$("#run-code").html("Hack(run) it!");
-
-					// enable button when this method is called
 					$("#compile-code").prop('disabled', false);
 					$("#run-code").prop('disabled', false);
 
-					$("html, body").delay(500).animate({
-						scrollTop: $('#show-results').offset().top
-					}, 1000);
+					if(check == 0)
+					{
+						$("#save-code-profile").html("Save Code To Profile");
+						// enable button when this method is called
+						$("#save-code-profile").prop('disabled', false);
+					}
 
-					$(".output-response-box").show();
-					$(".run-status").show();
-					$(".time-sec").show();
-					$(".memory-kb").show();
+					else if(check == 1)
+					{
+						// Change button text when this method is called
+						$("#run-code").html("Hack(run) it!");
 
-					$(".output-io").show();
-					$(".output-io-info").hide();
-					$(".compile-status").children(".value").html("--");
-					$(".run-status").children(".value").html("--");
-					$(".time-sec").children(".value").html("0.0");
-					$(".memory-kb").children(".value").html("0");
-					$(".error-key").html("Server error");
-					$(".error-message").html("Server couldn't complete request. Please try again!");
+						$("html, body").delay(500).animate({
+							scrollTop: $('#show-results').offset().top
+						}, 1000);
+
+						$(".output-response-box").show();
+						$(".run-status").show();
+						$(".time-sec").show();
+						$(".memory-kb").show();
+
+						$(".output-io").show();
+						$(".output-io-info").hide();
+						$(".compile-status").children(".value").html("--");
+						$(".run-status").children(".value").html("--");
+						$(".time-sec").children(".value").html("0.0");
+						$(".memory-kb").children(".value").html("0");
+						$(".error-key").html("Server error");
+						$(".error-message").html("Server couldn't complete request. Please try again!");
+					}
 				}
 			});
 		}
 
 	}
+
+
+
+$('#title-save').click(function(){
+	test(0);
+});
 
 
 	// when show-settings is clicked
@@ -778,9 +885,7 @@ $(document).ready(function(){
 
 	// when run-code is clicked
 	$("#run-code").click(function(){
-
-		runCode();
-
+		test(1);
 	});
 
 	// check if input box is to be show
@@ -790,4 +895,150 @@ $(document).ready(function(){
 	}
 
 
+	$("#register").click(function(){
+		var username = $('#signup_username').val();
+		var email = $("#signup_email").val();
+		var password = $("#signup_password").val();
+
+		$("#register").html("Registering");
+		$("#register").prop('disabled', true);
+		
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+		var form_data = {username : username, email : email, password : password, csrfmiddlewaretoken : csrf_token};
+		$.ajax({
+			url : 'register/',
+			type : 'POST',
+			data : form_data,
+			dataType : 'json',
+			timeout : '10000',
+			success : function(response){
+				$("#error_username").html(response.error_username);
+				$("#error_email").html(response.error_email);
+				$("#error_password").html(response.error_password);
+
+				$("#register").prop('disabled', false);
+				$("#register").html("Register");
+
+				$("#msg").html(response.msg);
+				if (response.error_username == "" && response.error_email == "" && response.error_password == "")
+				{
+					$("#register").html("Registered");
+					location.reload();
+				}
+			},
+		});
+	});
+
+	$('#login').click(function(){
+		var username = $('#login_username').val();
+		var password = $("#login_password").val();
+
+		$("#login").html("Logging In");
+		$("#login").prop("disabled", true);
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+
+		var login_form_data = {username : username, password : password, csrfmiddlewaretoken : csrf_token};
+
+		$.ajax({
+			url : 'login/',
+			type : 'POST',
+			data : login_form_data,
+			dataType : 'json',
+			timeout : 10000,
+			success : function(response){
+
+				$("#login").prop("disabled", false);
+				$("#login").html("Login");
+
+				$('#login_msg').html(response.msg);
+				if(response.msg != "Invalid credentials")
+				{
+					$("#login").html("Logged In Sucessfully");
+					location.reload();
+				}
+
+			},
+		});
+	});
+
+	$("#logout").click(function(){
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+		logout_data = {csrfmiddlewaretoken:csrf_token}		
+
+		$.ajax({
+			url : 'logout/',
+			type : 'POST',
+			data : logout_data,
+			dataType : 'json',
+			timeout : 10000,
+			success : function(response){
+				location.reload();
+			},
+		});
+	});
+
+	
+	$("#data_table").on('click', '#close_data', function(){
+
+		var i = $(this).closest('tr').attr('id');
+		var parent = $(this).closest('tr');
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+		var remove_data = {csrfmiddlewaretoken:csrf_token, id:i};
+
+		$.ajax({
+			url: 'removecode/',
+			type: "POST",
+			data: remove_data,
+			dataType: "json",
+			timeout: 10000,
+			success : function(response){
+				parent.fadeOut('slow', function(){
+					parent.remove();
+				});
+			},
+		});
+	});
+
+	$("#profile_btn").click(function(){
+		var csrf_token = $(":input[name='csrfmiddlewaretoken']").val();
+
+		var profile_data = {csrfmiddlewaretoken:csrf_token};
+		$.ajax({
+			url: 'displayprofile/',
+			type: "POST",
+			data: profile_data,
+			dataType: "json",
+			timeout: 10000,
+			success : function(response){
+				$("#data_table").html("<tr><th>Code Id</th><th>Title</th><th></th></tr>");
+				if(location.port == "")
+				{
+					for(var i=0;i<response.code_id.length;i++)
+					{	
+						var link = "/code_id=" + response.code_id[i] + "/";
+						$("#data_table").append("<tr id='"+ response.code_id[i] +"'><td>"+response.code_id[i]+"</td><td>"+ response.code_title[i] +"</td><td><a target='_blank' href='"+ link +"' class='btn btn-success'>Open</a><button type='button'  id='close_data' class='close'><span id='close_data'>&times;</span></button></td></tr>");
+					}
+				}
+				else
+				{	
+					for(var i=0;i<response.code_id.length;i++)
+					{
+						var link = "/code_id=" + response.code_id[i] + "/";
+						$("#data_table").append("<tr id='"+ response.code_id[i] +"'><td>"+response.code_id[i]+"</td><td>"+ response.code_title[i] +"</td><td><a target='_blank' href='"+ link +"' class='btn btn-success'>Open</a><button type='button'  id='close_data' class='close'><span id='close_data'>&times;</span></button></td></tr>");
+					}
+				}
+			},
+
+		});		
+
+	});
+
+
+	editor.on('change', function(){
+		$("#title-save").prop('disabled', false);
+		$("#title-save").html("Save");
+
+		$("#save-code-profile").prop('disabled', false);
+		$("#save-code-profile").html("Save Code To Profile");
+	});
 });

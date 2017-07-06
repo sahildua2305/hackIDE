@@ -12,6 +12,7 @@ decorator==3.4.0
 django-cors-headers==1.1.0
 gunicorn==19.4.5
 oauthlib==0.6.1
+passlib==1.6.5
 pycurl==7.19.3
 requests==2.2.1
 simplejson==3.3.1

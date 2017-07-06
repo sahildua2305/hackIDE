@@ -33,14 +33,111 @@
     <input type='hidden' id='run_status_memory' value={{run_status_memory}} />
     <input type='hidden' id='run_status_output' value={{run_status_output}} />
     <input type='hidden' id='run_status_stderr' value={{run_status_stderr}} />
-    <textarea id='copy_link' readonly></textarea>
+    <textarea style="position:absolute;" id='copy_link' readonly></textarea>
     <nav class="navbar navbar-default">
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="/"> hackIDE </a>
             </div>
             <ul class="nav navbar-nav navbar-right">
+                <li style="background-color:#80d4ff">
+                    {% if 'username' in request.session %}
+                        <a>{{ request.session.username }}</a>
+                    {% endif %}
+                </li>
                 <li><a href="/"> New Code </a></li>
+
+                {% if 'username' in request.session %}
+                    <li><a href='' data-toggle='modal' data-target='#profile_modal' id="profile_btn">Profile</a>
+                        <div id="profile_modal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                            <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">Saved Codes</h4>
+                                        <h2 id="msg_copied"></h2>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-hover" id="data_table">
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li><a href='' id="logout">Log Out</a></li>
+                {% else %}                
+                <li><a href='' data-toggle='modal' data-target='#login_modal'>Login</a>
+                    <div id="login_modal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                        <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Login</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                    {% csrf_token %}
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="username" placeholder="Username" id="login_username">
+                                            <div style="color:red;" id="login_error_username"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control" name="password" placeholder="Password" id="login_password">
+                                            <div style="color:red;" id="login_error_username"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <span style="color:red;" id="login_msg"></span><span>&nbsp;</span>
+                                    <button type="button" id="login" class="btn btn-default">Login</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+                <li><a href='' data-toggle='modal' data-target='#sign_up_modal'>Sign Up</a>
+                    <div id="sign_up_modal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+                        <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Sign Up</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="signup_username" placeholder="Username" id="signup_username">
+                                            <div style="color:red;" id="error_username"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" name="signup_email" placeholder="Email" id="signup_email">
+                                            <div style="color:red;" id="error_email"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control" name="signup_password" placeholder="Password" id="signup_password">
+                                            <div style="color:red;" id="error_password"></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <div id="msg"></div>
+                                    <button type="button" id="register" class="btn btn-default">Register</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+
             </ul>
         </div>
     </nav>
@@ -76,7 +173,7 @@
                         <a class="cursor no-select" id="show-settings">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                         </a>
-                        <div id="settings-pane">
+-                        <div id="settings-pane">
                             <div id="inner-settings-pane"></div>
                             <label>Editor Theme</label>
                             <select class="form-control" name="editor-theme" id="editor-theme">
@@ -108,6 +205,27 @@
                 </div>
                 <div class="pull-right run-save-panel">
                     <span id='copy_code'></span>
+                    {% if 'username' in request.session %}
+                    <!--<button class="btn btn-info" id="save-code-profile" data-toggle="tooltip" data-placement="top" >Save Code To Profile</button>-->
+                    <button class="btn btn-info" id="save-code-profile" data-toggle='modal' data-target='#title-save-modal'>Save Code to Profile</button>
+                        <div id="title-save-modal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                            <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input class="form-control" id="code-title" type="text" placeholder="Title" name="title">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <span style="color:red;" id="error_save_title"></span><span>&nbsp;</span>
+                                        <button class="btn btn-info" id="title-save" type="button">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                     <button class="btn btn-info" id="compile-code" data-toggle="tooltip" data-placement="top" title="Press Shift+Enter">Compile it!</button>
                     <button class="btn btn-success" id="run-code" data-toggle="tooltip" data-placement="top" title="Press Ctrl+Enter">Hack(run) it!</button>
                 </div>
@@ -250,6 +368,7 @@
         </div>
     </noscript>
     <!-- End of StatCounter Code for Default Guide -->
+
 </body>
 
 </html>

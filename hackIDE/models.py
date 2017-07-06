@@ -24,3 +24,11 @@ class codes(Document):
     run_status_memory=StringField(required=True)
     run_status_output=StringField(required=True)
     run_status_stderr=StringField(required=True)
+
+
+class Users(Document):
+    username = StringField(required=True)
+    email = StringField(required=True)
+    password = StringField(required=True)
+    code = ListField()
+    title = ListField()
