@@ -211,7 +211,7 @@ $(document).ready(function(){
 		zip.file(filename+"."+ext, text)
 		var downloaded = zip.generate({type : "blob"})
 
-		var user_filename_choice = prompt("Enter a filename for the .zip", "filename")
+		var user_filename_choice = prompt("Enter a filename for the .zip", filename)
 		if (user_filename_choice == null || user_filename_choice == "" || user_filename_choice == " " ){
 		saveAs(downloaded, "default.zip")
 		} else {
