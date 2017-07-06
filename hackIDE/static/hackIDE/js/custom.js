@@ -215,7 +215,7 @@ $(document).ready(function(){
 		if (user_filename_choice == null || user_filename_choice ==  || user_filename_choice ==  ){
 		saveAs(downloaded, default.zip)
 		} else {
-		saveAs(downloaded, user_filename_choice+.zip)
+		saveAs(downloaded, user_filename_choice+".zip")
 		}
 
 	}
