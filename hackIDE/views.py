@@ -9,8 +9,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseForbidden
 from models import codes
+from .tasks import async_json_post_request
 
-import requests, json, os
+import json, os
 
 COMPILE_URL = "https://api.hackerearth.com/v3/code/compile/"
 RUN_URL = "https://api.hackerearth.com/v3/code/run/"
@@ -91,8 +92,8 @@ def compileCode(request):
         'lang': lang,
       }
 
-      r = requests.post(COMPILE_URL, data=compile_data)
-      return JsonResponse(r.json(), safe=False)
+      returned_data = async_json_post_request.delay(COMPILE_URL, compile_data).get()
+      return JsonResponse(returned_data, safe=False)
   else:
     return HttpResponseForbidden();
 
@@ -141,8 +142,7 @@ def runCode(request):
       Make call to /run/ endpoint of HackerEarth API
       and save code and result in database
       """
-      r = requests.post(RUN_URL, data=run_data)
-      r = r.json()
+      r = async_json_post_request.delay(RUN_URL, run_data).get()
       cs = ""
       rss = ""
       rst = ""
