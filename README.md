@@ -22,6 +22,7 @@ mkdir virtualEnvs
 cd virtualEnvs
 virtualenv hackIDE_venv # we need python2. If you are using 3 by default type virtualenv -p /usr/bin/python2.7 hackIDE_venv
 source ~/virtualEnvs/hackIDE_venv/bin/activate
+cd /location/of/your/copy/of/hackIDE
 pip install -r requirements.txt
 ```
 
