@@ -19,4 +19,5 @@ simplejson==3.3.1
 urllib3==1.7.1
 wheel==0.24.0
 whitenoise==2.0.6
+wsgiref==0.1.2; python_version < '3'
 mongoengine==0.10.6
