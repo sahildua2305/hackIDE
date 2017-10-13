@@ -8,7 +8,7 @@
 
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseForbidden
-from models import codes
+from .models import codes
 
 import requests, json, os
 
