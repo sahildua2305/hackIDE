@@ -111,7 +111,7 @@ $(document).ready(function(){
 			$(".output-io").show();
 			$(".output-io-info").hide();
 			$(".compile-status").children(".value").html("--");
-			$(".run-status").children(".value").html("CE");
+			$(".run-status").children(".value").html("Compilation Error");
 			$(".time-sec").children(".value").html("0.0");
 			$(".memory-kb").children(".value").html("0");
 			$(".error-key").html("Compile error");
@@ -452,7 +452,7 @@ $(document).ready(function(){
 						$(".output-io").show();
 						$(".output-io-info").hide();
 						$(".compile-status").children(".value").html("--");
-						$(".run-status").children(".value").html("CE");
+						$(".run-status").children(".value").html("Compilation Error");
 						$(".time-sec").children(".value").html("0.0");
 						$(".memory-kb").children(".value").html("0");
 						$(".error-key").html("Compile error");
@@ -571,7 +571,7 @@ $(document).ready(function(){
 						$(".output-io").show();
 						$(".output-io-info").hide();
 						$(".compile-status").children(".value").html("--");
-						$(".run-status").children(".value").html("CE");
+						$(".run-status").children(".value").html("Compilation Error");
 						$(".time-sec").children(".value").html("0.0");
 						$(".memory-kb").children(".value").html("0");
 						$(".error-key").html("Compile error");
