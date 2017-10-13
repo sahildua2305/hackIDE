@@ -28,13 +28,20 @@ pip install -r requirements.txt
 
 
 ## How to run the server locally
+To run the server locally you will need to do two things:
+1. Get a hackerearth API "Client Secret Key"
+2. Change the hackIDE_project/settings.py file
 
+### Get a Client Secret Key
+Go to https://www.hackerearth.com/api/register/, create a HackerEarth profile and register a url. You can register http://google.com, for example. Then you will be provided with a Client Secret Key.
+
+###  Change the hackIDE_project/settings.py file.
+Change the ALLOWED_HOSTS line to
 ```
-$ python manage.py collectstatic
-$ HACKIDE_DEBUG=true python manage.py runserver
+ALLOWED_HOSTS = ['*'] if not DEBUG else ['*']
 ```
 
-Note that the IDE may not show up without a valid api token from HackerEarth. To specify the HackerEarth api token, supply it with ```HE_CLIENT_SECRET``` as a command line argument.
+### Then startup the server with:
 
 ```
 $ python manage.py collectstatic
@@ -44,5 +51,5 @@ $ HE_CLIENT_SECRET=your_token_here python manage.py runserver
 ## TODO
  - [x] Add "Download code as a zipped file" option
  - [x] Implement "Save code on cloud" feature
- - [ ] Explain how to get a hackerearth API key
+ - [x] Explain how to get a hackerearth API key
  - [ ] Implement profiling system allowing users to make their profiles and saving codes in their profiles
