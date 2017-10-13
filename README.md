@@ -48,6 +48,8 @@ $ python manage.py collectstatic
 $ HE_CLIENT_SECRET=your_token_here python manage.py runserver
 ```
 
+Then you can connect to the site at 0.0.0.0:8000
+
 ## TODO
  - [x] Add "Download code as a zipped file" option
  - [x] Implement "Save code on cloud" feature
