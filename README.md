@@ -20,7 +20,7 @@ To get your python environment environment properly set up you can create a virt
 cd
 mkdir virtualEnvs
 cd virtualEnvs
-virtualenv hackIDE_venv # we need python2. If you are using 3 by default type virtualenv -p /usr/bin/python2.7 hackIDE_venv
+virtualenv hackIDE_venv # If you want a particular python version: virtualenv -p /usr/bin/pythonX.Y hackIDE_venv
 source ~/virtualEnvs/hackIDE_venv/bin/activate
 cd /location/of/your/copy/of/hackIDE
 pip install -r requirements.txt
