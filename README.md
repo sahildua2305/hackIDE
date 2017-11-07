@@ -17,8 +17,7 @@ sudo apt-get install libmysqlclient-dev libcurl4-gnutls-dev
 To get your python environment environment properly set up you can create a virtual environment and use the requirements.txt file to install the proper versions of various libraries.
 
 ```shell
-$ # Navigate to a directory of your choosing, where you will store your virtual environment. For example:
-$ cd
+# Navigate to a directory of your choosing, where you will store your virtual environment.
 $ mkdir virtualEnvs
 $ cd virtualEnvs
 $ virtualenv hackIDE_venv # we need python2. If you are using 3 by default type virtualenv -p /usr/bin/python2.7 hackIDE_venv
