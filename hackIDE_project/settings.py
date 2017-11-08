@@ -26,7 +26,7 @@ SECRET_KEY = '+h*i@$52+w(_e#etvzgnkjq!q0ajz1qpgs-y9%89x4w3nlct=m'
 DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
 # DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
 
-ALLOWED_HOSTS = ['hackide.herokuapp.com'] if not DEBUG else ['*']
+ALLOWED_HOSTS = ['hackide.herokuapp.com', 'localhost', '127.0.0.1'] if not DEBUG else ['*']
 
 # To allow the cross site request over the app
 CORS_ORIGIN_ALLOW_ALL = True
@@ -138,3 +138,11 @@ STATICFILES_DIRS = (
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+# Celery Configuration
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
