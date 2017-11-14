@@ -10,20 +10,20 @@ hackIDE is an online code editor, compiler and interpreter based on Django, powe
 
 ## Getting set up
 Depending on your environment you may need to install some libraries. On debian/ubuntu you will need to:
-```
-    sudo apt-get install libmysqlclient-dev libcurl4-gnutls-dev
+```shell
+sudo apt-get install libmysqlclient-dev libcurl4-gnutls-dev
 ```
 
 To get your python environment environment properly set up you can create a virtual environment and use the requirements.txt file to install the proper versions of various libraries.
-```
-#Navigate to a directory of your choosing, where you will store your virtual environment. For example:
-cd
-mkdir virtualEnvs
-cd virtualEnvs
-virtualenv hackIDE_venv # If you want a particular python version: virtualenv -p /usr/bin/pythonX.Y hackIDE_venv
-source ~/virtualEnvs/hackIDE_venv/bin/activate
-cd /location/of/your/copy/of/hackIDE
-pip install -r requirements.txt
+
+```shell
+# Navigate to a directory of your choosing, where you will store your virtual environment.
+$ mkdir virtualEnvs
+$ cd virtualEnvs
+$ virtualenv hackIDE_venv # we need python2. If you are using 3 by default type virtualenv -p /usr/bin/python2.7 hackIDE_venv
+$ source ~/virtualEnvs/hackIDE_venv/bin/activate
+$ cd /location/of/your/copy/of/hackIDE
+$ pip install -r requirements.txt
 ```
 
 
@@ -37,13 +37,13 @@ Go to https://www.hackerearth.com/api/register/, create a HackerEarth profile an
 
 ###  Change the hackIDE_project/settings.py file.
 Change the ALLOWED_HOSTS line to
-```
+```shell
 ALLOWED_HOSTS = ['*'] if not DEBUG else ['*']
 ```
 
 ### Then startup the server with:
 
-```
+```shell
 $ python manage.py collectstatic
 $ HE_CLIENT_SECRET=your_token_here python manage.py runserver
 ```
