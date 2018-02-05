@@ -55,3 +55,7 @@ Then you can connect to the site at 0.0.0.0:8000
  - [x] Implement "Save code on cloud" feature
  - [x] Explain how to get a hackerearth API key
  - [ ] Implement profiling system allowing users to make their profiles and saving codes in their profiles
+
+## Stargazers over time
+
+[![Stargazers over time](https://starcharts.herokuapp.com/sahildua2305/hackide.svg)](https://starcharts.herokuapp.com/sahildua2305/hackide)
