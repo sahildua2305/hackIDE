@@ -14,7 +14,7 @@ django-cors-headers==1.1.0
 gunicorn==19.5.0
 oauthlib==0.6.1
 pycurl==7.19.3
-requests==2.2.1
+requests>=2.20.0
 simplejson==3.3.1
 urllib3==1.7.1
 wheel==0.24.0
