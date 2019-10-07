@@ -20,9 +20,7 @@ DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
 # DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
 CLIENT_SECRET = os.environ['HE_CLIENT_SECRET'] if not DEBUG else ""
 
-permitted_languages = ["C", "CPP", "CSHARP", "CLOJURE", "CSS", "HASKELL", "JAVA", "JAVASCRIPT", "OBJECTIVEC", "PERL", "PHP", "PYTHON", "R", "RUBY", "RUST", "SCALA"]
-
-
+permitted_languages = ["C", "CPP","CPP11", "CSHARP", "CLOJURE", "CSS", "HASKELL", "JAVA", "JAVASCRIPT", "OBJECTIVEC", "PERL", "PHP", "PYTHON", "R", "RUBY", "RUST", "SCALA"]
 """
 Check if source given with the request is empty
 """
