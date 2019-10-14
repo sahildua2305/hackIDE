@@ -66,6 +66,7 @@
                             <option value="RUBY">Ruby (ruby 2.1.1)</option>
                             <option value="RUST">Rust (rustc 1.4.0)</option>
                             <option value="SCALA">Scala (scalac 2.9.1)</option>
+                            <option value="SOLIDITY">Solidity (0.5.11 commit.c082d0b4)</option>
                         </select>
                     </div>
                     <!-- END of lang-choose -->
@@ -216,6 +217,10 @@
     <script src="{% static 'hackIDE/ace-builds/src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static 'hackIDE/ace-builds/src/ext-statusbar.js' %}" type="text/javascript" charset="utf-8"></script>
     <script src="{% static 'hackIDE/ace-builds/src/ext-language_tools.js' %}" type="text/javascript" charset="utf-8"></script>
+    
+    <!-- Solidity 0.5.11 compiler -->
+    <script src="{% static 'hackIDE/js/solidity-compiler.min.js' %}" type="text/javascript" charset="utf-8"></script>
+
     <!-- Include all the custom js here -->
     <!-- Start of Google Analytics Code -->
     <script>

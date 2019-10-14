@@ -39,6 +39,7 @@ $(document).ready(function(){
 	langBoilerplate['RUBY'] = "# your code goes here";
 	langBoilerplate['RUST'] = "fn main() {\n    // The statements here will be executed when the compiled binary is called\n\n    // Print text to the console\n    println!(\"Hello World!\");\n}\n";
 	langBoilerplate['SCALA'] = "object Main extends App {\n	// your code goes here\n}\n";
+	langBoilerplate['SOLIDITY'] = "pragma solidity ^0.5.11; \n	// your code goes here\n";
 
 	// flag to block requests when a request is running
 	var request_ongoing = false;
@@ -195,7 +196,7 @@ $(document).ready(function(){
 			"R":"r",
 			"RUBY":"rb",
 			"RUST":"rs",
-			"SCALA":"scala"
+			"SCALA":"scala",
 		}[ext] || "txt";
 	}
 
@@ -229,6 +230,7 @@ $(document).ready(function(){
 	 *
 	 */
 	function compileCode(){
+		
 
 		// if a compile request is ongoing
 		if(request_ongoing)
@@ -254,6 +256,16 @@ $(document).ready(function(){
 			COMPILE_URL = '/../compile/';
 		}
 
+		if(languageSelected === 'SOLIDITY'){
+			BrowserSolc.loadVersion('soljson-v0.5.11+commit.c082d0b4.js', function(compiler) {
+				source = editorContent;
+				optimize = 1;
+				result = compiler.compile(source, optimize);
+				console.log(result);
+			});
+			return;
+		}
+
 		var compile_data = {
 			source: editorContent,
 			lang: languageSelected,
@@ -261,6 +273,8 @@ $(document).ready(function(){
 		};
 
 		request_ongoing = true;
+
+		
 
 		// AJAX request to Django for compiling code
 		$.ajax({
