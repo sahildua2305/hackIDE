@@ -1,6 +1,6 @@
 Babel==2.1.1
 Django==1.9.1; python_version < '3'
-Django==1.11; python_version > '2.99'
+Django==1.11.29; python_version > '2.99'
 Jinja2==2.8
 MarkupSafe==0.23
 MySQL-python==1.2.3; python_version < '3'
