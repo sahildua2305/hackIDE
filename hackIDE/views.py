@@ -15,10 +15,7 @@ import requests, json, os
 COMPILE_URL = "https://api.hackerearth.com/v3/code/compile/"
 RUN_URL = "https://api.hackerearth.com/v3/code/run/"
 
-# access config variable
-DEBUG = (os.environ.get('HACKIDE_DEBUG') != None)
-# DEBUG = (os.environ.get('HACKIDE_DEBUG') or "").lower() == "true"
-CLIENT_SECRET = os.environ['HE_CLIENT_SECRET'] if not DEBUG else ""
+CLIENT_SECRET = os.environ.get('HE_CLIENT_SECRET', '')
 
 permitted_languages = ["C", "CPP", "CSHARP", "CLOJURE", "CSS", "HASKELL", "JAVA", "JAVASCRIPT", "OBJECTIVEC", "PERL", "PHP", "PYTHON", "R", "RUBY", "RUST", "SCALA"]
 
