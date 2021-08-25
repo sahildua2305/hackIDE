@@ -1,0 +1,23 @@
+version: "3.9"
+# base compose. utilizes overrides
+# dev: docker-compose up. deployment: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+services:
+  web:
+    env_file:
+      - .env
+    volumes:
+      - ./:/home/app_runner/code/
+    user: app_runner
+    build: .
+    image: hackide
+    command: sh -c "python manage.py collectstatic --no-input && python manage.py runserver 0.0.0.0:8000"
+    # command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+  mongo:
+    image: mongo
+    env_file: 
+      - .env
+    restart: always
+    volumes:
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
