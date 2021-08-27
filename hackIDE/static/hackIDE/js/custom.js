@@ -8,6 +8,8 @@
 
 $(document).ready(function(){
 
+	// to reset all the previous code base if present in local storage on reload
+	resetLocalStorage()
 	// contents of the editor at any step
 	var editorContent;
 	// language selected
@@ -40,6 +42,9 @@ $(document).ready(function(){
 	langBoilerplate['RUST'] = "fn main() {\n    // The statements here will be executed when the compiled binary is called\n\n    // Print text to the console\n    println!(\"Hello World!\");\n}\n";
 	langBoilerplate['SCALA'] = "object Main extends App {\n	// your code goes here\n}\n";
 
+	// changing boiler plate of languages according to the once present in local storage
+	updateBoilerPlate(langBoilerplate)
+
 	// flag to block requests when a request is running
 	var request_ongoing = false;
 
@@ -71,6 +76,14 @@ $(document).ready(function(){
 
 
 	checkForInitialData();
+
+	// function to auto-save current code in local storage
+	$("#editor").keyup(() => {
+		var editor = ace.edit("editor");
+		var languageCode = editor.getValue();
+		var lang = $("#lang").val();
+		localStorage.setItem(lang, languageCode);
+	})
 
 	function showResultBox() {
 		$(".output-response-box").show();
@@ -646,6 +659,8 @@ $(document).ready(function(){
 	// when lang is changed
 	$("#lang").change(function(){
 
+		updateBoilerPlate(langBoilerplate)
+
 		languageSelected = $("#lang").val();
 
 		// update the language (mode) for the editor
@@ -791,3 +806,22 @@ $(document).ready(function(){
 
 
 });
+
+// function to update the language boiler plates
+function updateBoilerPlate(langBoilerplate)
+{
+	var supportedLanguages = ['C', 'CPP', 'CSHARP', 'CSS', 'CLOJURE', 'HASKELL', 'JAVA', 'JAVASCRIPT', 'OBJECTIVEC', 'PERL', 'PHP', 'PYTHON', 'R', 'RUBY', 'RUST', 'SCALA'];
+
+	supportedLanguages.forEach((language) => {
+		let previousCode = localStorage.getItem(language);
+		if(previousCode !== null && previousCode.length !== 0)
+		{
+			langBoilerplate[language] = previousCode;
+		}
+	})
+}
+
+// function to reset local storage
+function resetLocalStorage() {
+	window.localStorage.clear();
+}
