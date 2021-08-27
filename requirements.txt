@@ -1,12 +1,12 @@
 Babel==2.1.1
 Django==1.9.1; python_version < '3'
-Django==1.11.29; python_version > '2.99'
-Jinja2==2.8
+Django==2.2.24; python_version > '2.99'
+Jinja2==2.11.3
 MarkupSafe==0.23
 MySQL-python==1.2.3; python_version < '3'
-Pillow==6.2.0
+Pillow==8.2.0
 PyPDF2==1.25.1
-Pygments==2.0.2
+Pygments==2.7.4
 Sphinx==1.3.3
 beautifulsoup4==4.4.0
 decorator==3.4.0
@@ -16,7 +16,7 @@ oauthlib==0.6.1
 pycurl==7.19.3
 requests>=2.20.0
 simplejson==3.3.1
-urllib3==1.24.2
+urllib3==1.26.5
 wheel==0.24.0
 whitenoise==2.0.6
 wsgiref==0.1.2; python_version < '3'
