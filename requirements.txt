@@ -1,4 +1,4 @@
-Babel==2.1.1
+Babel==2.9.1
 Django==1.9.1; python_version < '3'
 Django==2.2.24; python_version > '2.99'
 Jinja2==2.11.3
